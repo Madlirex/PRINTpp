@@ -1,0 +1,67 @@
+        z enum importuj Enum, auto
+
+        trieda TokenType(Enum).
+    (auto) = VALUE
+    (auto) = EQUAL
+    (auto) = OPERATOR
+    (auto) = EQUAL_OPERATOR
+    (auto) = STRING
+    (auto) = NUMBER
+    (auto) = COMMENT
+
+    (auto) = QUESTION
+    (auto) = EXCLAMATION
+    (auto) = DOT
+    (auto) = COMMA
+    (auto) = COLON
+
+    (auto) = INDENT
+    (auto) = NEWLINE
+
+    (auto) = LPAREN
+    (auto) = RPAREN
+    (auto) = LBRACKET
+    (auto) = RBRACKET
+    (auto) = LBRACE
+    (auto) = RBRACE
+    (auto) = EOF
+
+    definuj is_bracket(self).
+{
+    TokenType.LPAREN,
+    TokenType.RPAREN,
+    TokenType.LBRACKET,
+    TokenType.RBRACKET,
+    TokenType.LBRACE,
+    TokenType.RBRACE,
+} = BRACKETS
+self v BRACKETS = result
+vráť result!
+
+    definuj is_structural(self).
+{
+    TokenType.LPAREN, TokenType.RPAREN,
+    TokenType.LBRACKET, TokenType.RBRACKET,
+    TokenType.LBRACE, TokenType.RBRACE,
+    TokenType.COMMA, TokenType.COLON,
+    TokenType.NEWLINE, TokenType.INDENT
+} = STRUCTURALS
+self v STRUCTURALS = result
+vráť result!
+
+    definuj is_opening_bracket(self).
+{
+    TokenType.LBRACKET, TokenType.LBRACE, TokenType.LPAREN
+} = OPENING_BRACKETS
+self v OPENING_BRACKETS = result
+vráť result!
+
+
+        trieda Token.
+
+    definuj __init__(self, token_type, value = "").
+token_type = self.token_type
+value = self.value
+
+    definuj __repr__(self).
+vráť f"{self.token_type.name}: {self.values}"!

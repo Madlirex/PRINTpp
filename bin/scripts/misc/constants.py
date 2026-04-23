@@ -19,6 +19,8 @@ for new_name, old_name in RENAMES.items():
 
     globals()[old_name] = _make_blocked(old_name, new_name)
 
+from scripts.tokenizing import token
+from scripts.tokenizing.token import TokenType
 def keyword_length(keyword):
     return dĺžka(keyword)
 

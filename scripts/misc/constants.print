@@ -1,3 +1,4 @@
+    z scripts.tokenizing importuj token
     z scripts.tokenizing.token importuj TokenType
 
     definuj keyword_length(keyword).
