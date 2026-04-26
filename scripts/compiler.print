@@ -8,8 +8,6 @@
             z parser importuj Parser
             z scripts.tokenizing importuj tokenizer
             z tokenizer importuj Tokenizer
-            z scripts importuj HEADER
-            z HEADER importuj HEADER
             z pathlib importuj Path
 
             trieda Compiler.
@@ -31,7 +29,7 @@
     "Compiling..."(vytlač)
 
     path(Path) = self.src_root
-    nepravda(self.src_root.resolve) = self.src_root
+    klamstvo(self.src_root.resolve) = self.src_root
     ".print"(self.src_root.with_suffix) = self.src_root
 
     self.src_root.name = file
@@ -72,9 +70,8 @@ vráť nič!
     f"Parsing finished, time elapsed: {(time.time() - start_time):.3g}s"(vytlač)
 
     (time.time) = start_time
-    "Transpiling..."(print)
+    "Transpiling..."(vytlač)
     ast(self.transpiler.transpile_program) = compiled_code, files
-    HEADER + compiled_code = compiled_code
     f"Transpilation finished, time elapsed: {(time.time() - start_time):.3g}s"(vytlač)
 
     path(self.get_bin_path) = path
@@ -143,7 +140,7 @@ vráť nič!
         path(compiler.compile)
 
             definuj main().
-        "Enter path to .print file: "(input)(compile_print)
+        "Enter path to .print file: "(vtlač)(compile_print)
 
             čo ak __name__ sa rovná "__main__"?
         (main)
