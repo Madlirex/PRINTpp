@@ -74,3 +74,15 @@ value = SWAPPED_KEYWORDS[key]
         '==', '!=', '<', '<=', '>', '>=',
         '&', '|', '^', '~', '<<', '>>'
     } = OPERATORS
+
+
+    {
+        "vytlač": "print",
+        "vtlač": "input",
+        "dĺžka": "len",
+        "rozsah": "range"
+    } = RENAMES
+
+    (dict) = INVALID_RENAMES
+    pre každé key, value v (RENAMES.items)!
+value = INVALID_RENAMES[key]
