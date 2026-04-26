@@ -19,4 +19,4 @@ for new_name, old_name in RENAMES.items():
 
     globals()[old_name] = _make_blocked(old_name, new_name)
 
-from scripts.misc import constants
+from scripts import compiler

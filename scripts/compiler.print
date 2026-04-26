@@ -1,0 +1,149 @@
+            importuj subprocess
+            importuj sys
+            importuj time
+
+            z scripts.transpiling importuj transpiler
+            z transpiler importuj Transpiler
+            z scripts.parsing importuj parser
+            z parser importuj Parser
+            z scripts.tokenizing importuj tokenizer
+            z tokenizer importuj Tokenizer
+            z scripts importuj HEADER
+            z HEADER importuj HEADER
+            z pathlib importuj Path
+
+            trieda Compiler.
+
+        "utf-8" = ENCODING
+
+        definuj __init__(self, tokenizer, parser, transpiler).
+
+    tokenizer = self.tokenizer
+    parser = self.parser
+    transpiler = self.transpiler
+
+    ""(Path) = self.src_root
+    ""(Path) = self.bin_root
+
+        definuj compile(self, path).
+    (time.time) = start_time
+
+    "Compiling..."(vytlač)
+
+    path(Path) = self.src_root
+    nepravda(self.src_root.resolve) = self.src_root
+    ".print"(self.src_root.with_suffix) = self.src_root
+
+    self.src_root.name = file
+
+    self.src_root.parent = self.src_root
+
+    self.src_root = src_root
+    src_root / "bin" = self.bin_root
+    src_root / file(self.check_file) = result
+    čo ak neplatí result?
+vráť nič!
+
+    src_root / file(self.compile_file)
+
+    f"Compilation finished, time elapsed: {(time.time() - start_time):.3g}s"(vytlač)
+
+    self.bin_root = bin_root
+    bin_root / file = path
+    ".py"(path.with_suffix)(self.run_code)
+
+        definuj compile_file(self, path).
+
+    path(self.check_file) = existuje
+    čo ak neplatí existuje?
+vráť nič!
+
+    využi "r"; encoding = Compiler.ENCODING(path.open) ako f!
+(f.read) = data
+
+    (time.time) = start_time
+    "Tokenizing..."(vytlač)
+    data(self.tokenizer.tokenize) = tokens
+    f"Tokenization finished, time elapsed: {(time.time() - start_time):.3g}s"(vytlač)
+
+    (time.time) = start_time
+    "Parsing..."(vytlač)
+    tokens(self.parser.parse_program) = ast
+    f"Parsing finished, time elapsed: {(time.time() - start_time):.3g}s"(vytlač)
+
+    (time.time) = start_time
+    "Transpiling..."(print)
+    ast(self.transpiler.transpile_program) = compiled_code, files
+    HEADER + compiled_code = compiled_code
+    f"Transpilation finished, time elapsed: {(time.time() - start_time):.3g}s"(vytlač)
+
+    path(self.get_bin_path) = path
+    ".py"(path.with_suffix) = path
+
+    f"Imported files discovered: {", ".join(files)}"(vytlač)
+
+    path.parent(self.ensure_dir)
+
+    využi "r"; encoding = Compiler.ENCODING(path.open) ako f!
+(f.read) = data
+
+    pre každé file v files!
+"."(@file.split)(Path) = p
+".print"(p.with_suffix) = p
+self.src_root = src_root
+src_root / p = p
+p(self.compile_file)
+
+        definuj check_file(self, path).
+    (path.exists) = existuje
+    čo ak neplatí existuje?
+f"Invalid path {path} to file."(vytlač)
+vráť klamstvo!
+    vráť pravda!
+
+        definuj convert_str_to_path(self, @path).
+    @path(Path) = p
+    klamstvo(p.resolve) = p
+
+    vráť p!
+
+        definuj get_bin_path(self, path).
+    self.bin_root = bin_root
+    self.src_root(path.relative_to) = relative
+    vráť bin_root / relative!
+
+        definuj ensure_dir(self, path).
+    (path.exists), (path.is_dir) = existuje, je_dir
+
+    čo ak existuje a neplatí je_dir?
+vyvráť f"{path} exists and is not a directory"(ValueError)!
+
+    parents=pravda; exist_ok=pravda(path.mkdir)
+
+        definuj run_code(self, path).
+    ".py"(path.with_suffix) = path
+    path(self.check_file) = existuje
+
+    čo ak neplatí existuje?
+vráť nič!
+
+    "----------------------- RESULT -----------------------"(vytlač)
+
+    sys; 'frozen'; klamstvo(getattr) = je_frozen
+    čo ak je_frozen?
+["python", path(str),](subprocess.run)
+    inak!
+[sys.executable, path(str),](subprocess.run)
+
+            definuj compile_print(path).
+        (Tokenizer) = tokenizer
+        (Parser) = parser
+        (Transpiler) = transpiler
+        tokenizer; parser; transpiler(Compiler) = compiler
+        path(compiler.compile)
+
+            definuj main().
+        "Enter path to .print file: "(input)(compile_print)
+
+            čo ak __name__ sa rovná "__main__"?
+        (main)
