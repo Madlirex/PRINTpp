@@ -1,0 +1,372 @@
+            z __future__ importuj annotations
+            z typing importuj TYPE_CHECKING
+
+            čo ak TYPE_CHECKING?
+        z scripts.transpiling importuj itranspiler
+        z itranspiler importuj ITranspiler
+
+            trieda Node.
+
+        definuj accept(self, visitor).
+    vyvráť NotImplementedError!
+
+            trieda Block(Node).
+
+        definuj __init__(self, nodes = nič).
+    nodes = self.nodes
+    čo ak nodes je nič?
+[,] = self.nodes
+
+        definuj accept(self, visitor).
+    vráť self(visitor.visit_block)!
+
+            trieda Variable(Node).
+        definuj __init__(self, name).
+    name = self.name
+
+        definuj accept(self, visitor).
+    vráť self(visitor.visit_variable)!
+
+            trieda Number(Node).
+        definuj __init__(self, value).
+    value = self.value
+
+        definuj accept(self, visitor).
+    vráť self(visitor.visit_number)!
+
+            trieda String(Node).
+        definuj __init__(self, value).
+    value = self.value
+
+        definuj accept(self, visitor).
+    vráť self(visitor.visit_string)!
+
+            trieda Attribute(Node).
+        definuj __init__(self, obj, name).
+    obj = self.obj
+    name = self.name
+
+        definuj accept(self, visitor).
+    vráť self(visitor.visit_attribute)!
+
+            trieda Call(Node).
+        definuj __init__(self, func, args).
+    func = self.func
+    args = self.args
+
+        definuj accept(self, visitor).
+    vráť self(visitor.visit_call)!
+
+            trieda Assignment(Node).
+        definuj __init__(self, left, right, operator = "=").
+    left = self.left
+    right = self.right
+    operator = self.operator
+
+        definuj accept(self, visitor).
+    vráť self(visitor.visit_assignment)!
+
+            trieda IfStatement(Node).
+        definuj __init__(self, condition, body, elifs = nič, else_body = nič).
+    condition = self.condition
+    body = self.body
+    elifs = self.elifs
+    else_body = self.else_body
+    čo ak elifs je nič?
+[,] = self.elifs
+    čo ak else_body je nič?
+[(Pass),](Block) = self.else_body
+
+        definuj accept(self, visitor).
+    vráť self(visitor.visit_if)!
+
+            trieda Return(Node).
+        definuj __init__(self, value).
+    value = self.value
+
+        definuj accept(self, visitor).
+    vráť self(visitor.visit_return)!
+
+            trieda FunctionDef(Node).
+        definuj __init__(self, name, body, params = nič).
+    name = self.name
+    params = self.params
+    body = self.body
+    čo ak params je nič?
+[,] = self.params
+
+        definuj accept(self, visitor).
+    vráť self(visitor.visit_function)!
+
+            trieda While(Node).
+        definuj __init__(self, condition, body).
+    condition = self.condition
+    body = self.body
+
+        definuj accept(self, visitor).
+    vráť self(visitor.visit_while)!
+
+            trieda TryExcept(Node).
+        definuj __init__(self, body, excepts = nič).
+    body = self.body
+    excepts = self.excepts
+    čo ak excepts je nič?
+[,] = self.excepts
+
+        definuj accept(self, visitor).
+    vráť self(visitor.visit_try)!
+
+            trieda Lambda(Node).
+        definuj __init__(self, params, body).
+    params = self.params
+    body = self.body
+
+        definuj accept(self, visitor).
+    vráť self(visitor.visit_lambda)!
+
+            trieda ForLoop(Node).
+        definuj __init__(self, variable, expression, body, else_body = nič).
+    variable = self.variable
+    body = self.body
+    expression = self.expression
+    else_body = self.else_body
+    čo ak else_body je nič?
+[,] = self.else_body
+
+        definuj accept(self, visitor).
+    vráť self(visitor.visit_for)!
+
+            trieda ClassDef(Node).
+        definuj __init__(self, name, body, parents = nič).
+    name = self.name
+    body = self.body
+    parents = self.parents
+    čo ak parents je nič?
+[,] = self.parents
+
+        definuj accept(self, visitor).
+    vráť self(visitor.visit_class)!
+
+            trieda TernaryOp(Node).
+        definuj __init__(self, condition, value1, value2).
+    condition = self.condition
+    value1 = self.value1
+    value2 = self.value2
+
+        definuj accept(self, visitor).
+    vráť self(visitor.visit_ternary)!
+
+            trieda ListComprehension(Node).
+        definuj __init__(self, variable, expression, body = nič, filter_condition = nič).
+    body = self.body
+    variable = self.variable
+    expression = self.expression
+    filter_condition = self.filter
+    čo ak body je nič?
+[,] = self.body
+
+        definuj accept(self, visitor).
+    vráť self(visitor.visit_list_comp)!
+
+            trieda ListNode(Node).
+        definuj __init__(self, values = nič).
+    values = self.values
+    čo ak values je nič?
+[,] = self.values
+
+        definuj accept(self, visitor).
+    vráť self(visitor.visit_list)!
+
+            trieda TupleNode(Node).
+        definuj __init__(self, values = nič).
+    values = self.values
+    čo ak values je nič?
+[,] = self.values
+
+        definuj accept(self, visitor).
+    vráť self(visitor.visit_tuple)!
+
+            trieda SetNode(Node).
+        definuj __init__(self, values = nič).
+    values = self.values
+    čo ak values je nič?
+[,] = self.values
+
+        definuj accept(self, visitor).
+    vráť self(visitor.visit_set)!
+
+            trieda DictionaryNode(Node).
+        definuj __init__(self, keys = nič, values = nič).
+    keys = self.keys
+    values = self.values
+    čo ak keys je nič?
+[,] = self.keys
+    čo ak values je nič?
+[,] = self.values
+
+        definuj accept(self, visitor).
+    vráť self(visitor.visit_dict)!
+
+            trieda Boolean(Node).
+        definuj __init__(self, value).
+    value = self.value
+
+        definuj accept(self, visitor).
+    vráť self(visitor.visit_bool)!
+
+            trieda NoneNode(Node).
+        definuj accept(self, visitor).
+    vráť self(visitor.visit_none)!
+
+            trieda Index(Node).
+        definuj __init__(self, obj, index).
+    obj = self.obj
+    index = self.index
+
+        definuj accept(self, visitor).
+    vráť self(visitor.visit_index)!
+
+            trieda Slice(Node).
+        definuj __init__(self, obj, start = nič, end = nič, step = nič).
+    obj = self.obj
+    start = self.start
+    end = self.end
+    step = self.step
+
+        definuj accept(self, visitor).
+    vráť self(visitor.visit_slice)!
+
+            trieda Import(Node).
+        definuj __init__(self, modules, aliases = nič).
+    modules = self.modules
+    aliases = self.aliases
+    čo ak aliases je nič?
+[,] = self.aliases
+
+        definuj accept(self, visitor).
+    vráť self(visitor.visit_import)!
+
+            trieda FromImport(Node).
+        definuj __init__(self, path, modules, aliases = nič).
+    path = self.path
+    modules = self.modules
+    aliases = self.aliases
+    čo ak aliases je nič?
+[,] = self.aliases
+
+        definuj accept(self, visitor).
+    vráť self(visitor.visit_from_import)!
+
+            trieda Raise(Node).
+        definuj __init__(self, value).
+    value = self.value
+
+        definuj accept(self, visitor).
+    vráť self(visitor.visit_raise)!
+
+            trieda Break(Node).
+        definuj accept(self, visitor).
+    vráť self(visitor.visit_break)!
+
+            trieda Continue(Node).
+        definuj accept(self, visitor).
+    vráť self(visitor.visit_continue)!
+
+            trieda Pass(Node).
+        definuj accept(self, visitor).
+    vráť self(visitor.visit_pass)!
+
+            trieda Yield(Node).
+        definuj __init__(self, value).
+    value = self.value
+
+        definuj accept(self, visitor).
+    vráť self(visitor.visit_yield)!
+
+            trieda MatchNode(Node).
+        definuj __init__(self, variable, values).
+    variable = self.variable
+    values = self.values
+
+        definuj accept(self, visitor).
+    vráť self(visitor.visit_match)!
+
+            trieda AndNode(Node).
+        definuj __init__(self, left, right).
+    left = self.left
+    right = self.right
+
+        definuj accept(self, visitor).
+    vráť self(visitor.visit_and)!
+
+            trieda OrNode(Node).
+        definuj __init__(self, left, right).
+    left = self.left
+    right = self.right
+
+        definuj accept(self, visitor).
+    vráť self(visitor.visit_or)!
+
+            trieda NotNode(Node).
+        definuj __init__(self, value).
+    value = self.value
+
+        definuj accept(self, visitor).
+    vráť self(visitor.visit_not)!
+
+            trieda Operation(Node).
+        definuj __init__(self, left, right, operator).
+    left = self.left
+    right = self.right
+    operator = self.operator
+
+        definuj accept(self, visitor).
+    vráť self(visitor.visit_operation)!
+
+            trieda InNode(Node).
+        definuj __init__(self, left, right).
+    left = self.left
+    right = self.right
+
+        definuj accept(self, visitor).
+    vráť self(visitor.visit_in)!
+
+            trieda IsNode(Node).
+        definuj __init__(self, left, right).
+    left = self.left
+    right = self.right
+
+        definuj accept(self, visitor).
+    vráť self(visitor.visit_is)!
+
+            trieda KeyArg(Node).
+        definuj __init__(self, variable, value).
+    variable = self.variable
+    value = self.value
+
+        definuj accept(self, visitor).
+    vráť self(visitor.visit_keyarg)!
+
+            trieda Program(Node).
+        definuj __init__(self, block = nič).
+    block.nodes(dĺžka) = dlzka
+    čo ak neplatí block alebo dlzka sa rovná 0?
+[(Pass),](Block) = self.block
+    inak!
+block = self.block
+
+            trieda DelNode(Node).
+        definuj __init__(self, value).
+    value = self.value
+
+        definuj accept(self, visitor).
+    vráť self(visitor.visit_del)!
+
+            trieda WithNode(Node).
+        definuj __init__(self, statement, body, alias = nič).
+    statement = self.statement
+    body = self.body
+    alias = self.alias
+
+        definuj accept(self, visitor).
+    vráť self(visitor.visit_with)!
