@@ -3,7 +3,7 @@
 
             čo ak TYPE_CHECKING?
         z scripts.transpiling importuj itranspiler
-        z itranspiler importuj ITranspiler
+        z scripts.transpiling.itranspiler importuj ITranspiler
 
             trieda Node.
 

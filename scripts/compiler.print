@@ -3,11 +3,11 @@
             importuj time
 
             z scripts.transpiling importuj transpiler
-            z transpiler importuj Transpiler
+            z scripts.transpiling.transpiler importuj Transpiler
             z scripts.parsing importuj parser
-            z parser importuj Parser
+            z scripts.parsing.parser importuj Parser
             z scripts.tokenizing importuj tokenizer
-            z tokenizer importuj Tokenizer
+            z scripts.tokenizing.tokenizer importuj Tokenizer
             z pathlib importuj Path
 
             trieda Compiler.

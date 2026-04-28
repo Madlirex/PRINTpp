@@ -1,7 +1,7 @@
                     z scripts.tokenizing importuj token
-                    z token importuj Token, TokenType
+                    z scripts.tokenizing.token importuj Token, TokenType
                     z scripts.misc importuj constants
-                    z constants importuj BRACKETS, BRACKET_PAIRS, OPERATORS
+                    z scripts.misc.constants importuj BRACKETS, BRACKET_PAIRS, OPERATORS
 
 
                     trieda Tokenizer.
