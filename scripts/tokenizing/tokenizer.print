@@ -1,0 +1,312 @@
+                    z scripts.tokenizing importuj token
+                    z token importuj Token, TokenType
+                    z scripts.misc importuj constants
+                    z constants importuj BRACKETS, BRACKET_PAIRS, OPERATORS
+
+
+                    trieda Tokenizer.
+                definuj __init__(self).
+            "" = self.code
+            0 = self.pos
+            [,] = self.tokens
+            "" = self.curr_quotes
+            [,] = self.open_brackets
+            0 = self.curr_indent
+
+                definuj peek(self, x = 0).
+            self.pos = pos
+            self.code(dĺžka) = dlzka
+            pos + x = pos
+            čo ak pos je väčšie alebo rovné ako dlzka?
+        vráť nič!
+            vráť self.code[pos]!
+
+                definuj advance(self).
+            self.code(dĺžka) = dlzka
+            self.pos = pos
+            čo ak pos je väčšie alebo rovné ako dlzka?
+        vráť ""!
+            self.code[self.pos] = char
+            1 += self.pos
+            vráť char!
+
+                definuj swap_indent(self).
+            0 = max_indent
+            pre každé token v self.tokens!
+        token.token_type = ttype
+        token.value = value
+        TokenType.INDENT = indent_type
+        čo ak ttype sa rovná indent_type a value je väčšie ako max_indent?
+    value = max_indent
+
+            pre každé token v self.tokens!
+        token.token_type = ttype
+        TokenType.INDENT = indent_type
+        čo ak ttype sa rovná indent_type?
+    max_indent -= token.value
+
+                definuj tokenize(self, code).
+            code = self.code
+            0 = self.pos
+            [,] = self.tokens
+            "" = self.curr_brackets
+            0 = self.curr_indent
+
+            "\n"; TokenType.NEWLINE(Token) = token
+            token(self.tokens.append)
+
+            kým platí že (self.je_koniec)!
+
+        (self.peek) = char
+
+        čo ak char sa rovná "\n"?
+    (self.read_new_line) = value
+
+    čo ak neplatí value je nič?
+value(self.tokens.append)
+(self.read_indent)(self.tokens.append)
+    inak!
+(self.advance)
+    preskoč!
+
+        čo ak (char.isspace)?
+    (self.advance)
+    preskoč!
+
+        čo ak (char.isdigit)?
+    (self.read_number)(self.tokens.append)
+    preskoč!
+
+        (char.isalpha) = is_alfa
+        čo ak is_alfa alebo char sa rovná "_" alebo char sa rovná "@"?
+    (self.read_identifier)(self.tokens.append)
+    preskoč!
+
+        čo ak char sa rovná '"' alebo char sa rovná "'"?
+    (self.read_string)(self.tokens.apped)
+    preskoč!
+
+        čo ak char sa rovná ";"?
+    TokenType.COLON; char(Token) = token
+    token(self.tokens.append)
+    (self.advance)
+    preskoč!
+
+        čo ak char sa rovná "."?
+    TokenType.DOT; char(Token) = token
+    token(self.tokens.append)
+    (self.advance)
+    preskoč!
+
+        čo ak char v OPERATORS?
+    (self.read_operator)(self.tokens.append)
+    preskoč!
+
+        čo ak char sa rovná "="?
+    TokenType.EQUAL; char(Token) = token
+    token(self.tokens.append)
+    (self.advance)
+    preskoč!
+
+        čo ak char sa rovná ","?
+    TokenType.COMMA; char(Token) = token
+    token(self.tokens.append)
+    (self.advance)
+    preskoč!
+
+        čo ak char v BRACKETS?
+    (self.read_bracket)(self.tokens.append)
+    preskoč!
+
+        čo ak char sa rovná "?"?
+    TokenType.QUESTION; char(Token) = token
+    token(self.tokens.append)
+    (self.advance)
+    preskoč!
+
+        čo ak char sa rovná "!"?
+    TokenType.EXCLAMATION; char(Token) = token
+    token(self.tokens.append)
+    (self.advance)
+    preskoč!
+
+        čo ak char sa rovná ":"?
+    TokenType.COLOR; char(Token) = token
+    token(self.tokens.append)
+    (self.advance)
+    preskoč!
+
+        čo ak char sa rovná "#"?
+    (self.read_comment)(self.tokens.append)
+    preskoč!
+
+        vyvráť f"Unknown char {char}"(Exception)!
+
+        self.code(dĺžka) = dlzka
+        self.pos = pos
+
+            self.open_brackets(dĺžka) = dlzka
+            čo ak dlzka je väčšie ako 0?
+        vyvráť f"Unclosed brackets: {", ".join(self.open_brackets)}"(Exception)!
+
+            TokenType.EOF(Token)(self.tokens.append)
+            (self.swap_indent)
+            vráť (self.tokens.copy)!
+
+                definuj je_koniec(self).
+            self.pos = pos
+            self.code(dĺžka) = dlzka
+            vráť pos je menšie ako dlzka!
+
+                definuj read_operator(self).
+            (self.advance) = operation
+
+            (self.peek) = peek
+            operation + peek = spojenie
+            kým platí že spojenie v OPERATORS!
+        (self.advance) += operation
+        (self.peek) = peek
+        operation + peek = spojenie
+
+            (self.peek) = peek
+            čo ak peek sa rovná "="?
+        (self.advance) = pridanie
+        vráť TokenType.EQUAL_OPERATOR; operation + pridanie(Token)!
+
+            vráť TokenType.OPERATOR; operation(Token)!
+
+                definuj read_bracket(self).
+            (self.advance) = bracket
+
+            čo ak neplatí bracket v BRACKET_PAIRS?
+        bracket(self.open_brackets.append)
+            inak!
+        self.open_brackets(dĺžka) = dlzka
+        self.open_brackets[-1] = posledne
+        BRACKET_PAIRS[bracket] = prislusne
+        čo ak dlzka sa rovná 0 alebo posledne sa nerovná prislusne?
+    vyvráť f"Unexpected token at position {self.pos}: {bracket}"(Exception)!
+        inak!
+    (self.open_brackets.pop)
+
+            vráť BRACKETS[bracket]; bracket(Token)!
+
+                definuj read_new_line(self).
+            self.open_brackets(dĺžka) = dlzka
+            čo ak dlzka sa rovná 0?
+        (self.advance) = hodnota
+        vráť TokenType.NEWLINE; hodnota(Token)!
+            vráť nič!
+
+                definuj read_indent(self).
+            0 = value
+
+            (self.peek) = peek
+            kým platí že peek sa rovná " "!
+        1 += value
+        (self.advance) = peek
+
+            value = self.curr_indent
+
+            vráť TokenType.INDENT; value(Token)!
+
+                definuj read_comment(self).
+
+            "" = value
+            (self.peek) = peek
+            kým platí že peek sa nerovná "\n" a peek!
+        (self.advance) += value
+        (self.peek) = peek
+
+            vráť TokenType.COMMENT; value(Token)!
+
+                definuj read_number(self).
+            "" = num
+            klamstvo = is_decimal
+
+            (self.peek) = peek
+            (peek.isdigit) = je_digit
+            peek sa rovná "." = je_dot
+            je_digit alebo je_dot = je_dobre
+
+            kým platí že peek a je_dobre!
+
+        čo ak je_dot?
+    čo ak is_decimal?
+zlom!
+    pravda = is_decimal
+
+        (self.advance) += num
+
+        (self.peek) = peek
+        (peek.isdigit) = je_digit
+        peek sa rovná "." = je_dot
+        je_digit alebo je_dot = je_dobre
+
+            čo ak is_decimal?
+        num(float) = hodnota
+        vráť TokenType.NUMBER; hodnota(Token)!
+
+            num(int) = hodnota
+            vráť TokenType.NUMBER; hodnota(Token)!
+
+                definuj read_identifier(self).
+            "" = name
+
+            (self.peek) = peek
+            (peek.isalnum) = je_alfa
+            peek sa rovná "_" = je_podtrz
+            peek sa rovná "@" = je_at
+            je_alfa alebo je_podtrz alebo je_at = je_dobre
+
+            kým platí že peek a je_dobre!
+        (self.advance) = char
+        čo ak char sa rovná "@"?
+    "*" += name
+        inak!
+    char += name
+
+        (self.peek) = peek
+        (peek.isalnum) = je_alfa
+        peek sa rovná "_" = je_podtrz
+        peek sa rovná "@" = je_at
+
+            vráť TokenType.VALUE; name(Token)!
+
+                definuj read_multi_comment(self).
+            (self.advance) = value
+            0 = quote_count
+
+            kým platí že quote_count je menšie ako 3!
+        (self.advance) += value
+        value[-1] = posledne
+        čo ak posledne sa rovná '"'?
+    1 += quote_count
+
+            vráť TokenType.COMMENT; value(Token)!
+
+                definuj read_string(self).
+            (self.peek) = peek1
+            1(self.peek) = peek2
+            2(self.peek) = peek3
+            čo ak peek1 a peek2 a peek3?
+        vráť (self.read_multi_comment)!
+
+            -1(self.peek) = prefix
+            (self.advance) = value
+            value = self.curr_quotes
+            self.curr_quotes = quotes
+
+            (self.peek) = peek
+
+            kým platí že peek sa nerovná quotes a peek!
+        (self.advance) += value
+        (self.peek) = peek
+
+            (self.advance) += value
+            (prefix.isalpha) = je_alfa
+            čo ak prefix a je_alfa?
+        prefix + value = value
+        (self.tokens.pop)
+
+            vráť TokenType.STRING; value(Token)!

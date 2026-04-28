@@ -1,24 +1,3 @@
-import builtins
-
-RENAMES = {
-    "vytlač": "print",
-    "vtlač": "input",
-    "dĺžka": "len",
-    "rozsah": "range"
-}
-
-def _make_blocked(old_name, new_name):
-    def blocked(*args, **kwargs):
-        raise RuntimeError(f"Use '{new_name}' instead of '{old_name}'")
-    return blocked
-
-for new_name, old_name in RENAMES.items():
-    original = getattr(builtins, old_name)
-
-    globals()[new_name] = original
-
-    globals()[old_name] = _make_blocked(old_name, new_name)
-
 import subprocess
 import sys
 import time
@@ -28,8 +7,6 @@ from scripts.parsing import parser
 from parser import Parser
 from scripts.tokenizing import tokenizer
 from tokenizer import Tokenizer
-from scripts import HEADER
-from HEADER import HEADER
 from pathlib import Path
 class Compiler():
     ENCODING = "utf-8"
@@ -42,9 +19,9 @@ class Compiler():
 
     def compile(self, path):
         start_time = time.time()
-        vytlač("Compiling...")
+        print("Compiling...")
         self.src_root = Path(path)
-        self.src_root = self.src_root.resolve(nepravda)
+        self.src_root = self.src_root.resolve(False)
         self.src_root = self.src_root.with_suffix(".print")
         file = self.src_root.name
         self.src_root = self.src_root.parent
@@ -57,7 +34,7 @@ class Compiler():
             pass
 
         self.compile_file(src_root / file)
-        vytlač(f"Compilation finished, time elapsed: {(time.time() - start_time):.3g}s")
+        print(f"Compilation finished, time elapsed: {(time.time() - start_time):.3g}s")
         bin_root = self.bin_root
         path = bin_root / file
         self.run_code(path.with_suffix(".py"))
@@ -73,20 +50,92 @@ class Compiler():
             data = f.read()
 
         start_time = time.time()
-        vytlač("Tokenizing...")
+        print("Tokenizing...")
         tokens = self.tokenizer.tokenize(data)
-        vytlač(f"Tokenization finished, time elapsed: {(time.time() - start_time):.3g}s")
+        print(f"Tokenization finished, time elapsed: {(time.time() - start_time):.3g}s")
         start_time = time.time()
-        vytlač("Parsing...")
+        print("Parsing...")
         ast = self.parser.parse_program(tokens)
-        vytlač(f"Parsing finished, time elapsed: {(time.time() - start_time):.3g}s")
+        print(f"Parsing finished, time elapsed: {(time.time() - start_time):.3g}s")
         start_time = time.time()
         print("Transpiling...")
         compiled_code, files = self.transpiler.transpile_program(ast)
-        compiled_code = HEADER + compiled_code
-        vytlač(f"Transpilation finished, time elapsed: {(time.time() - start_time):.3g}s")
+        print(f"Transpilation finished, time elapsed: {(time.time() - start_time):.3g}s")
         path = self.get_bin_path(path)
         path = path.with_suffix(".py")
-        vytlač((f"Imported files discovered: {", ".join(files)}"))
+        print((f"Imported files discovered: {", ".join(files)}"))
+        self.ensure_dir(path.parent)
+        with path.open("r", encoding = Compiler.ENCODING) as f:
+            data = f.read()
 
+        for file in files:
+            p = Path(*file.split("."))
+            p = p.with_suffix(".print")
+            src_root = self.src_root
+            p = src_root / p
+            self.compile_file(p)
+        else:
+            pass
+
+
+    def check_file(self, path):
+        existuje = path.exists()
+        if not existuje:
+            print(f"Invalid path {path} to file.")
+            return False
+        else:
+            pass
+
+        return True
+
+    def convert_str_to_path(self, *path):
+        p = Path(*path)
+        p = p.resolve(False)
+        return p
+
+    def get_bin_path(self, path):
+        bin_root = self.bin_root
+        relative = path.relative_to(self.src_root)
+        return bin_root / relative
+
+    def ensure_dir(self, path):
+        existuje, je_dir = path.exists(), path.is_dir()
+        if existuje and not je_dir:
+            raise ValueError(f"{path} exists and is not a directory")
+        else:
+            pass
+
+        path.mkdir(parents = True, exist_ok = True)
+
+    def run_code(self, path):
+        path = path.with_suffix(".py")
+        existuje = self.check_file(path)
+        if not existuje:
+            return None
+        else:
+            pass
+
+        print("----------------------- RESULT -----------------------")
+        je_frozen = getattr(sys, 'frozen', False)
+        if je_frozen:
+            subprocess.run(["python", str(path)])
+        else:
+            subprocess.run([sys.executable, str(path)])
+
+
+
+def compile_print(path):
+    tokenizer = Tokenizer()
+    parser = Parser()
+    transpiler = Transpiler()
+    compiler = Compiler(tokenizer, parser, transpiler)
+    compiler.compile(path)
+
+def main():
+    compile_print(input("Enter path to .print file: "))
+
+if __name__ == "__main__":
+    main()
+else:
+    pass
 
