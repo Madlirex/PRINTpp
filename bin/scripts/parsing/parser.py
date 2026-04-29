@@ -110,6 +110,55 @@ class Parser():
 
         return True
 
+    def consume_words(self, tokens, *words):
+        if not self.match_words(tokens, *words):
+            raise SyntaxError(f"Expected {' '.join(words)}, got {tokens}")
+        else:
+            pass
+
+        return len(words)
+
+    def find_words(self, tokens, *words):
+        for i in range(len(tokens)):
+            if self.match_words(tokens[i::], *words):
+                return i
+            else:
+                pass
+
+        else:
+            pass
+
+        return 0 - 1
+
+    def peek_keyword(self, tokens):
+        for words, replacement in KEYWORDS_LIST:
+            if self.check_words(tokens, *words):
+                return replacement
+            else:
+                pass
+
+        else:
+            pass
+
+        return None
+
+    def consume_keyword(self):
+        for words, replacement in KEYWORDS_LIST:
+            if self.check_words(*words):
+                for _ in words:
+                    self.advance()
+                else:
+                    pass
+
+                return replacement
+            else:
+                pass
+
+        else:
+            pass
+
+        return None
+
     def check_end(self, tokens, token_type):
         actual = tokens[0 - 1].token_type
         if actual != token_type:
@@ -117,5 +166,8 @@ class Parser():
         else:
             pass
 
+
+    def check_indent(self, token):
+        INDENT = TokenType.INDENT
 
 
