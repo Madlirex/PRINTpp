@@ -222,4 +222,43 @@ class Parser():
 
         return token_buffer
 
+    def parse_program(self, tokens):
+        self.tokens = tokens
+        self.pos = 0
+        self.expected_indent = 0 - 4
+        program = Program(self.parse_block())
+        return program
+
+    def parse_tokens(self, tokens):
+        dlzka = len(tokens)
+        if dlzka == 1:
+            return self.parse_single_token(tokens[0])
+        else:
+            pass
+
+        if dlzka == 0:
+            return None
+        else:
+            pass
+
+        tok_t = tokens[1].token_type
+        EQUAL = TokenType.EQUAL
+        if tok_t == EQUAL:
+            return self.parse_keyarg(tokens)
+        else:
+            pass
+
+        if tokens[0 - 1].token_type.is_bracket():
+            COMMA = TokenType.COMMA
+            secondl_t = tokens[0 - 2].token_type
+            last_v = tokens[0 - 1].value
+            if secondl_t == COMMA or not last_v in "])":
+                return self.parse_list_type(tokens)
+            else:
+                pass
+
+        else:
+            pass
+
+
 

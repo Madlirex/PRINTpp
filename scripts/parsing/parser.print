@@ -161,3 +161,33 @@
         (self.is_at_end) = je_koniec
 
             vráť token_buffer!
+
+                definuj parse_program(self, tokens).
+            tokens = self.tokens
+            0 = self.pos
+            -4 = self.expected_indent
+
+            (self.parse_block)(Program) = program
+
+            vráť program!
+
+                definuj parse_tokens(self, tokens).
+            tokens(dĺžka) = dlzka
+
+            čo ak dlzka sa rovná 1?
+        vráť tokens[0](self.parse_single_token)!
+
+            čo ak dlzka sa rovná 0?
+        vráť nič!
+
+            tokens[1].token_type = tok_t
+            TokenType.EQUAL = EQUAL
+            čo ak tok_t sa rovná EQUAL?
+        vráť tokens(self.parse_keyarg)!
+
+            čo ak (tokens[-1].token_type.is_bracket)?
+        TokenType.COMMA = COMMA
+        tokens[-2].token_type = secondl_t
+        tokens[-1].value = last_v
+        čo ak secondl_t sa rovná COMMA alebo neplatí last_v v "])"?
+    vráť tokens(self.parse_list_type)!
