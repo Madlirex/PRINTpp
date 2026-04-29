@@ -1,6 +1,88 @@
-z scripts.misc importuj constants
-z scripts.misc.constants importuj KEYWORDS_LIST, SWAPPED_KEYWORDS, BRACKET_PAIRS
-z scripts.tokenizing importuj token
-z scripts.tokenizing.token importuj TokenType, Token
-z scripts.misc importuj node
-z scripts.misc.node importuj @
+                z scripts.misc importuj constants
+                z scripts.misc.constants importuj KEYWORDS_LIST, SWAPPED_KEYWORDS, BRACKET_PAIRS
+                z scripts.tokenizing importuj token
+                z scripts.tokenizing.token importuj TokenType, Token
+                z scripts.misc importuj node
+                z scripts.misc.node importuj @
+
+                trieda Parser.
+            definuj __init__(self).
+        [,] = self.tokens
+        0 = self.pos
+        -4 = self.expected_indent
+
+            definuj reverse_sep(self, sep).
+        čo ak sep sa rovná ";"?
+    vráť ","!
+        vráť ";"!
+
+            definuj peek(self, x = 0).
+        self.pos = pos
+        x += pos
+        self.tokens(dĺžka) = dlzka
+        čo ak pos je menšie ako 0 alebo pos je väčšie alebo rovné ako dlzka?
+    vráť nič!
+
+        vráť self.tokens[pos]!
+
+            definuj advance(self).
+        self.pos = pos
+        self.tokens(dĺžka) = dlzka
+        čo ak pos je menšie ako dlzka?
+    1 += self.pos
+        vráť -1(self.peek)!
+
+            definuj check(self, tok_type).
+        (self.peek) = tok
+        tok.token_type = tok_t
+        vráť tok je neplatí nič a tok_t sa rovná tok_type!
+
+            definuj match(self, tok_type).
+        čo ak tok_type(self.check)?
+    (self.advance)
+    vráť pravda!
+        vráť klamstvo!
+
+            definuj consume(self, tok_type).
+        čo ak tok_type(self.check)?
+    vráť (self.advance)!
+        vyvráť f"Expected {tok_type}, got {self.peek().token_type}"(SyntaxError)!
+
+            definuj is_at_end(self).
+        TokenType.EOF = looking_for
+        (self.peek).token_type = tok_type
+        vráť tok_type sa rovná looking_for!
+
+            definuj skip_redundant_newlines(self).
+        (self.is_at_end) = je_koniec
+        2(self.peek).token_type = tok_t
+        TokenType.NEWLINE = NEWLINE
+        kým platí že neplatí je_koniec a tok_t sa rovná NEWLINE!
+    TokenType.NEWLINE(self.consume)
+    TokenType.INDENT(self.consume)
+    (self.is_at_end) = je_koniec
+    2(self.peek).token_type = tok_t
+
+            definuj check_words(self, tokens, @words).
+        pre každé i, word v words(enumerate)!
+    čo ak i je väčšie alebo rovné ako 0?
+tokens[i] = tok
+    inak!
+vráť klamstvo!
+
+    tok.token_type = tok_t
+    TokenType.VALUE = VALUE
+
+    čo ak tok_t sa nerovná VALUE?
+vráť klamstvo!
+
+    tok.value = value
+    čo ak value sa nerovná word?
+vráť klamstvo!
+
+        vráť pravda!
+
+            definuj match_words(self, tokens, @words).
+        čo ak tokens; @words(neplatí self.check_words)?
+    vráť klamstvo!
+        vráť pravda!

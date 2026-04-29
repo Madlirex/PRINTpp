@@ -2,11 +2,11 @@ import subprocess
 import sys
 import time
 from scripts.transpiling import transpiler
-from transpiler import Transpiler
+from scripts.transpiling.transpiler import Transpiler
 from scripts.parsing import parser
-from parser import Parser
+from scripts.parsing.parser import Parser
 from scripts.tokenizing import tokenizer
-from tokenizer import Tokenizer
+from scripts.tokenizing.tokenizer import Tokenizer
 from pathlib import Path
 class Compiler():
     ENCODING = "utf-8"

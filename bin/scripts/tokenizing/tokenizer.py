@@ -1,7 +1,7 @@
 from scripts.tokenizing import token
-from token import Token, TokenType
+from scripts.tokenizing.token import Token, TokenType
 from scripts.misc import constants
-from constants import BRACKETS, BRACKET_PAIRS, OPERATORS
+from scripts.misc.constants import BRACKETS, BRACKET_PAIRS, OPERATORS
 class Tokenizer():
     def __init__(self):
         self.code = ""
