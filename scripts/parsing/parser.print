@@ -87,8 +87,21 @@ vráť klamstvo!
     vráť klamstvo!
         vráť pravda!
 
+            definuj consume_words(self, tokens, @words).
+        čo ak tokens; @words(neplatí self.match_words)?
+    vyvráť f"Expected {' '.join(words)}, got {tokens}"(SyntaxError)!
+        vráť words(dĺžka)!
 
-            definuj check_end(tokens, token_type).
+            definuj find_words(self, tokens, @words).
+        pre každé i v tokens(dĺžka)(rozsah)!
+    čo ak tokens[i:]; @words(self.match_words)?
+vráť i!
+        vráť -1!
+
+            definuj
+
+
+            definuj check_end(self, tokens, token_type).
         tokens[-1].token_type = actual
         čo ak actual sa nerovná token_type?
     vyvráť "Invalid syntax you illiterate swine"(SyntaxError)!

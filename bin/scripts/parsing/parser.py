@@ -110,4 +110,12 @@ class Parser():
 
         return True
 
+    def check_end(self, tokens, token_type):
+        actual = tokens[0 - 1].token_type
+        if actual != token_type:
+            raise SyntaxError("Invalid syntax you illiterate swine")
+        else:
+            pass
+
+
 
