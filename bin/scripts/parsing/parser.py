@@ -159,7 +159,7 @@ class Parser():
 
         return None
 
-    def check_end(self, tokens, token_type):
+    def check_end_token(self, tokens, token_type):
         actual = tokens[0 - 1].token_type
         if actual != token_type:
             raise SyntaxError("Invalid syntax you illiterate swine")
@@ -169,5 +169,57 @@ class Parser():
 
     def check_indent(self, token):
         INDENT = TokenType.INDENT
+        tok_t = token.token_type
+        if tok_t == INDENT:
+            value = token.value
+            expected = self.expected_indent
+            if not value == expected:
+                raise IndentationError(f"Wrong indent {token.value}, expected {self.expected_indent}")
+            else:
+                pass
+
+        else:
+            pass
+
+
+    def peek_curr_line(self):
+        token_buffer = []
+        i = 0
+        NEWLINE = TokenType.NEWLINE
+        COMMENT = TokenType.COMMENT
+        tok_t = self.peek(i).token_type
+        je_koniec = self.is_at_end()
+        while not je_koniec and not tok_t == NEWLINE:
+            token_buffer.append(self.peek(i))
+            i += 1
+            last_t = token_buffer[0 - 1].token_type
+            if last_t == COMMENT:
+                token_buffer.pop()
+            else:
+                pass
+
+            je_koniec = self.is_at_end()
+            tok_t = self.peek(i).token_type
+
+        return token_buffer
+
+    def consume_curr_line(self):
+        token_buffer = []
+        je_koniec = self.is_at_end()
+        NEWLINE = TokenType.NEWLINE
+        COMMENT = TokenType.COMMENT
+        tok_t = self.peek().token_type
+        while not je_koniec and not tok_t == NEWLINE:
+            token_buffer.append(self.advance())
+            last_t = token_buffer[0 - 1].token_type
+            if last_t == COMMENT:
+                token_buffer.pop()
+            else:
+                pass
+
+            tok_t = self.peek().token_type
+            je_koniec = self.is_at_end()
+
+        return token_buffer
 
 

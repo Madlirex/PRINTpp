@@ -120,3 +120,44 @@
 
                 definuj check_indent(self, token).
             TokenType.INDENT = INDENT
+            token.token_type = tok_t
+            čo ak tok_t sa rovná INDENT?
+        token.value = value
+        self.expected_indent = expected
+        čo ak neplatí value sa rovná expected?
+    vyvráť f"Wrong indent {token.value}, expected {self.expected_indent}"(IndentationError)!
+
+                definuj peek_curr_line(self).
+            [,] = token_buffer
+            0 = i
+            TokenType.NEWLINE = NEWLINE
+            TokenType.COMMENT = COMMENT
+            i(self.peek).token_type = tok_t
+            (self.is_at_end) = je_koniec
+            kým platí že neplatí je_koniec a neplatí tok_t sa rovná NEWLINE!
+        i(self.peek)(token_buffer.append)
+        1 += i
+        token_buffer[-1].token_type = last_t
+        čo ak last_t sa rovná COMMENT?
+    (token_buffer.pop)
+
+        (self.is_at_end) = je_koniec
+        i(self.peek).token_type = tok_t
+            vráť token_buffer!
+
+                definuj consume_curr_line(self).
+            [,] = token_buffer
+            (self.is_at_end) = je_koniec
+            TokenType.NEWLINE = NEWLINE
+            TokenType.COMMENT = COMMENT
+            (self.peek).token_type = tok_t
+            kým platí že neplatí je_koniec a neplatí tok_t sa rovná NEWLINE!
+        (self.advance)(token_buffer.append)
+        token_buffer[-1].token_type = last_t
+        čo ak last_t sa rovná COMMENT?
+    (token_buffer.pop)
+
+        (self.peek).token_type = tok_t
+        (self.is_at_end) = je_koniec
+
+            vráť token_buffer!
