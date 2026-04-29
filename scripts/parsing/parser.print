@@ -86,3 +86,9 @@ vráť klamstvo!
         čo ak tokens; @words(neplatí self.check_words)?
     vráť klamstvo!
         vráť pravda!
+
+
+            definuj check_end(tokens, token_type).
+        tokens[-1].token_type = actual
+        čo ak actual sa nerovná token_type?
+    vyvráť "Invalid syntax you illiterate swine"(SyntaxError)!
