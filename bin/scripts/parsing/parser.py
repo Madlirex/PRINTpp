@@ -924,4 +924,20 @@ class Parser():
 
         return SetNode(self.parse_token_list(tokens))
 
+    def parse_if(self, tokens):
+        self.consume_words(tokens, *SWAPPED_KEYWORDS["if"])
+        self.check_end_token(tokens, TokenType.QUESTION)
+        body = self.parse_block()
+        condition = self.parse_tokens(tokens[len(SWAPPED_KEYWORDS["if"]):0 - 1:])
+        return IfStatement(condition, body)
+
+    def parse_elif(self, tokens):
+        start = self.consume_words(tokens, *SWAPPED_KEYWORDS["elif"])
+        self.check_end_token(tokens, TokenType.QUESTION)
+        return (self.parse_tokens(tokens[start:0 - 1:]), self.parse_block())
+
+    def parse_else(self, tokens):
+        self.check_end_token(tokens, TokenType.EXCLAMATION)
+        return self.parse_block()
+
 
