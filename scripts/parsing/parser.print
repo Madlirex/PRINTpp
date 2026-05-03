@@ -358,3 +358,12 @@
 
                     vráť name; args(Call)!
 
+                        definuj parse_attribute(self, tokens).
+                    tokens[:-2](self.parse_tokens) = obj
+                    tokens[-1].value = name
+                    vráť obj; name(Attribute)!
+
+                        definuj parse_operator(self, tokens).
+                    tokens[0](self.parse_single_token) = left
+                    tokens[2](self.parse_single_token) = right
+                    vráť left; right; tokens[1].value(Operation)!

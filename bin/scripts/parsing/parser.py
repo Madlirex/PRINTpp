@@ -518,4 +518,14 @@ class Parser():
         args = self.parse_token_list(tokens[:start - 1:], ";")
         return Call(name, args)
 
+    def parse_attribute(self, tokens):
+        obj = self.parse_tokens(tokens[::])
+        name = tokens[0 - 1].value
+        return Attribute(obj, name)
+
+    def parse_operator(self, tokens):
+        left = self.parse_single_token(tokens[0])
+        right = self.parse_single_token(tokens[2])
+        return Operation(left, right, tokens[1].value)
+
 
