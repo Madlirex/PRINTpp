@@ -394,3 +394,49 @@
                     tokens[0](self.parse_single_token) = obj
                     tokens[2:](self.parse_tokens) = value
                     vráť obj; value(KeyArg)!
+
+                        definuj parse_slice(self, tokens).
+                    0 = open_brackets
+                    1 = x
+
+                    pre každé i v 1; tokens(dĺžka)(rozsah)!
+                čo ak tokens[i].value; str(isinstance)?
+            tokens[i].value = curr_v
+            čo ak curr_v v "{("?
+        1 += open_brackets
+            čo ak curr_v v "})"?
+        1 -= open_brackets
+
+                tokens[i].value = curr_v
+                čo ak curr_v sa rovná "[" a open_brackets sa rovná 0?
+            i = x
+            zlom!
+
+                    0 = open_brackets
+
+                    0, 0 = first, second
+                    pre každé i v x + 1; tokens(dĺžka)(rozsah)!
+                čo ak tokens[i].value; str(isinstance)?
+            tokens[i].value = curr_v
+            čo ak curr_v v "{("?
+        1 += open_brackets
+            čo ak curr_v v "})"?
+        1 -= open_brackets
+
+                tokens[i].value = curr_v
+                čo ak curr_v sa rovná ":" a open_brackets sa rovná 0?
+            čo ak first sa rovná 0?
+        i = first
+            ibaže second sa rovná 0?
+        i = second
+
+                    tokens[x + 1:first](self.parse_tokens) = start
+                    čo ak second sa nerovná 0?
+                tokens[first + 1:second](self.parse_tokens) = end
+                    inak!
+                nič = end
+                    tokens[second + 1:-1](dĺžka) = dlzka
+                    čo ak dlzka je väčšie ako 0 a second je väčšie ako 0?
+                tokens[second + 1:-1](self.parse_tokens) = step
+
+                    vráť tokens[:x](self.parse_tokens); start; end; step(Slice)!

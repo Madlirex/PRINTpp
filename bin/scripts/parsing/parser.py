@@ -487,8 +487,8 @@ class Parser():
             curr_t = tokens[i].token_type
             if curr_t == EQUAL or curr_t == EQUAL_OPERATOR:
                 op = tokens[i].value
-                left = self.parse_token_list(tokens[0::], ",")
-                right = self.parse_token_list(tokens[i::], ",")
+                left = self.parse_token_list(tokens[0:i:], ",")
+                right = self.parse_token_list(tokens[i:0:], ",")
                 break
             else:
                 pass
@@ -514,12 +514,12 @@ class Parser():
             pass
 
         end = 0 - 1
-        name = self.parse_tokens(tokens[start::])
+        name = self.parse_tokens(tokens[start:end:])
         args = self.parse_token_list(tokens[:start - 1:], ";")
         return Call(name, args)
 
     def parse_attribute(self, tokens):
-        obj = self.parse_tokens(tokens[::])
+        obj = self.parse_tokens(tokens[:0 - 2:])
         name = tokens[0 - 1].value
         return Attribute(obj, name)
 
@@ -557,13 +557,89 @@ class Parser():
         else:
             pass
 
-        obj = self.parse_tokens(tokens[::])
-        index = self.parse_tokens(tokens[start + 1::])
+        obj = self.parse_tokens(tokens[:start:])
+        index = self.parse_tokens(tokens[start + 1:0 - 1:])
         return Index(obj, index)
 
     def parse_keyarg(self, tokens):
         obj = self.parse_single_token(tokens[0])
         value = self.parse_tokens(tokens[2::])
         return KeyArg(obj, value)
+
+    def parse_slice(self, tokens):
+        open_brackets = 0
+        x = 1
+        for i in range(1, len(tokens)):
+            if isinstance(tokens[i].value, str):
+                curr_v = tokens[i].value
+                if curr_v in "{(":
+                    open_brackets += 1
+                else:
+                    pass
+
+                if curr_v in "})":
+                    open_brackets -= 1
+                else:
+                    pass
+
+            else:
+                pass
+
+            curr_v = tokens[i].value
+            if curr_v == "[" and open_brackets == 0:
+                x = i
+                break
+            else:
+                pass
+
+        else:
+            pass
+
+        open_brackets = 0
+        first, second = 0, 0
+        for i in range(x + 1, len(tokens)):
+            if isinstance(tokens[i].value, str):
+                curr_v = tokens[i].value
+                if curr_v in "{(":
+                    open_brackets += 1
+                else:
+                    pass
+
+                if curr_v in "})":
+                    open_brackets -= 1
+                else:
+                    pass
+
+            else:
+                pass
+
+            curr_v = tokens[i].value
+            if curr_v == ":" and open_brackets == 0:
+                if first == 0:
+                    first = i
+                elif second == 0:
+                    second = i
+                else:
+                    pass
+
+            else:
+                pass
+
+        else:
+            pass
+
+        start = self.parse_tokens(tokens[x + 1:first:])
+        if second != 0:
+            end = self.parse_tokens(tokens[first + 1:second:])
+        else:
+            end = None
+
+        dlzka = len(tokens[second + 1:0 - 1:])
+        if dlzka > 0 and second > 0:
+            step = self.parse_tokens(tokens[second + 1:0 - 1:])
+        else:
+            pass
+
+        return Slice(self.parse_tokens(tokens[:x:]), start, end, step)
 
 
