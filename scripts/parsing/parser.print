@@ -559,3 +559,76 @@
                 tokens[end:](self.parse_tokens) = right
                 vráť left; right; operator(Operation)!
                     vyvráť f"Expected {SWAPPED_KEYWORDS[operator]} to be in {tokens}"(SyntaxError)!
+
+                        definuj parse_single_token(self, token).
+                    token.token_type = tok_t
+                    TokenType.NUMBER = NUMBER
+                    token.value; str(isinstance) = je_num
+                    čo ak tok_t sa rovná NUMBER a neplatí je_num?
+                vráť token.value(Number)!
+
+                    čo ak token.value; str(neplatí isinstance)?
+                vyvráť f"Unexpected token: {token}"(Exception)!
+
+                    čo ak [token,]; @SWAPPED_KEYWORDS["None"](self.check_words)?
+                vráť (NoneNode)!
+                    čo ak [token,]; @SWAPPED_KEYWORDS["True"](self.check_words)?
+                vráť pravda(Boolean)!
+                    čo ak [token,]; @SWAPPED_KEYWORDS["False"](self.check_words)?
+                vráť klamstvo(Boolean)!
+
+                    TokenType.STRING = STRING
+                    čo ak tok_t sa rovná STRING?
+                vráť token.value(String)!
+
+                    TokenType.VALUE = VALUE
+                    čo ak tok_t sa rovná VALUE?
+                vráť token.value(Variable)!
+
+                    vyvráť f"Unexpected token: {token}"(Exception)!
+
+                        definuj parse_list_type(self, values).
+                    values[0].value = bracket
+                    čo ak bracket; str(neplatí isinstance)?
+                vyvráť f"Unexpected list type: {bracket}"(TypeError)!
+                    čo ak bracket v "{}"?
+                vráť values[1:-1](self.parse_braces)!
+                    čo ak bracket v "[]"?
+                vráť values[1:-1](self.parse_token_list)(ListNode)!
+                    čo ak bracket v "()"?
+                vráť values[1:-1](self.parse_token_list)(TupleNode)!
+
+                    vyvráť "Not implemented list type"(NotImplementedError)!
+
+                        definuj parse_token_list(self, values, sep).
+                    [,] = result
+                    [,] = open_brackets
+                    [,] = token_buffer
+
+                    pre každé token v values!
+                token(token_buffer.append)
+
+                čo ak (token.token_type.is_opening_bracket)?
+            token.value(open_brackets.append)
+                ibaže (token.token_type.is_bracket)?
+            open_brackets(dĺžka) = dlzka
+            BRACKET_PAIRSE[token.value] = corresponding_end
+            open_brackets[-1] = actual_end
+
+            čo ak dlzka je väčšie ako 0 a corresponding_end sa rovná actual_end?
+        (open_brackets.pop)
+            inak!
+        vyvráť "Not enough brackets to close"(Exception)!
+
+                open_brackets(dĺžka) = dlzka
+                čo ak dlzka sa rovná 0?
+            token.value = curr_val
+            čo ak curr_val sa rovná sep?
+        (token_buffer.pop)
+        token_buffer(self.parse_tokens)(result.append)
+        [,] = token_buffer
+
+                    token_buffer(self.parse_tokens)(result.append)
+                    vráť result!
+
+                        definuj

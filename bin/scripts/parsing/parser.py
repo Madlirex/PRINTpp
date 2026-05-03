@@ -776,4 +776,110 @@ class Parser():
 
         raise SyntaxError(f"Expected {SWAPPED_KEYWORDS[operator]} to be in {tokens}")
 
+    def parse_single_token(self, token):
+        tok_t = token.token_type
+        NUMBER = TokenType.NUMBER
+        je_num = isinstance(token.value, str)
+        if tok_t == NUMBER and not je_num:
+            return Number(token.value)
+        else:
+            pass
+
+        if not isinstance(token.value, str):
+            raise Exception(f"Unexpected token: {token}")
+        else:
+            pass
+
+        if self.check_words([token], *SWAPPED_KEYWORDS["None"]):
+            return NoneNode()
+        else:
+            pass
+
+        if self.check_words([token], *SWAPPED_KEYWORDS["True"]):
+            return Boolean(True)
+        else:
+            pass
+
+        if self.check_words([token], *SWAPPED_KEYWORDS["False"]):
+            return Boolean(False)
+        else:
+            pass
+
+        STRING = TokenType.STRING
+        if tok_t == STRING:
+            return String(token.value)
+        else:
+            pass
+
+        VALUE = TokenType.VALUE
+        if tok_t == VALUE:
+            return Variable(token.value)
+        else:
+            pass
+
+        raise Exception(f"Unexpected token: {token}")
+
+    def parse_list_type(self, values):
+        bracket = values[0].value
+        if not isinstance(bracket, str):
+            raise TypeError(f"Unexpected list type: {bracket}")
+        else:
+            pass
+
+        if bracket in "{}":
+            return self.parse_braces(values[1:0 - 1:])
+        else:
+            pass
+
+        if bracket in "[]":
+            return ListNode(self.parse_token_list(values[1:0 - 1:]))
+        else:
+            pass
+
+        if bracket in "()":
+            return TupleNode(self.parse_token_list(values[1:0 - 1:]))
+        else:
+            pass
+
+        raise NotImplementedError("Not implemented list type")
+
+    def parse_token_list(self, values, sep):
+        result = []
+        open_brackets = []
+        token_buffer = []
+        for token in values:
+            token_buffer.append(token)
+            if token.token_type.is_opening_bracket():
+                open_brackets.append(token.value)
+            elif token.token_type.is_bracket():
+                dlzka = len(open_brackets)
+                corresponding_end = BRACKET_PAIRSE[token.value]
+                actual_end = open_brackets[0 - 1]
+                if dlzka > 0 and corresponding_end == actual_end:
+                    open_brackets.pop()
+                else:
+                    raise Exception("Not enough brackets to close")
+
+            else:
+                pass
+
+            dlzka = len(open_brackets)
+            if dlzka == 0:
+                curr_val = token.value
+                if curr_val == sep:
+                    token_buffer.pop()
+                    result.append(self.parse_tokens(token_buffer))
+                    token_buffer = []
+                else:
+                    pass
+
+            else:
+                pass
+
+        else:
+            pass
+
+        result.append(self.parse_tokens(token_buffer))
+        return result
+
 
