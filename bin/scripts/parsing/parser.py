@@ -671,4 +671,109 @@ class Parser():
         self.check_end_token(tokens, TokenType.EXCLAMATION)
         return DelNode(self.parse_tokens(tokens[start:0 - 1:]))
 
+    def parse_logical_operator(self, tokens):
+        kw = self.peek_keyword(tokens)
+        if kw == "not":
+            return self.parse_not(tokens)
+        else:
+            pass
+
+        kw = self.peek_keyword(tokens[1::])
+        if kw == "or":
+            return self.parse_or(tokens)
+        else:
+            pass
+
+        if kw == "and":
+            return self.parse_and(tokens)
+        else:
+            pass
+
+        EQUALITIES = ("<", ">", "<=", ">=", "==", "!=")
+        if kw in EQUALITIES:
+            return self.parse_equality(tokens, kw)
+        else:
+            pass
+
+        if kw == "in":
+            return self.parse_in(tokens)
+        else:
+            pass
+
+        if kw == "is":
+            return self.parse_is(tokens)
+        else:
+            pass
+
+        raise NotImplementedError(f"Not implemented for tokens {tokens}")
+
+    def parse_not(self, tokens):
+        start = self.consume_words(tokens, *SWAPPED_KEYWORDS["not"])
+        return NotNode(self.parse_tokens(tokens[start::]))
+
+    def parse_or(self, tokens):
+        start = self.find_words(tokens, *SWAPPED_KEYWORDS["or"])
+        dlzka = len(SWAPPED_KEYWORDS["or"])
+        end = start + dlzka
+        if start != 0 - 1:
+            left = self.parse_tokens(tokens[:start:])
+            right = self.parse_tokens(tokens[end::])
+            return OrNode(left, right)
+        else:
+            pass
+
+        raise SyntaxError(f"Expected {SWAPPED_KEYWORDS['or']} to be in {tokens}")
+
+    def parse_and(self, tokens):
+        start = self.find_words(tokens, *SWAPPED_KEYWORDS["and"])
+        dlzka = len(SWAPPED_KEYWORDS["and"])
+        end = start + dlzka
+        if start != 0 - 1:
+            left = self.parse_tokens(tokens[:start:])
+            right = self.parse_tokens(tokens[end::])
+            return AndNode(left, right)
+        else:
+            pass
+
+        raise SyntaxError(f"Expected {SWAPPED_KEYWORDS['and']} to be in {tokens}")
+
+    def parse_in(self, tokens):
+        start = self.find_words(tokens, *SWAPPED_KEYWORDS["in"])
+        dlzka = len(SWAPPED_KEYWORDS["in"])
+        end = start + dlzka
+        if start != 0 - 1:
+            left = self.parse_tokens(tokens[:start:])
+            right = self.parse_tokens(tokens[end::])
+            return InNode(left, right)
+        else:
+            pass
+
+        raise SyntaxError(f"Expected {SWAPPED_KEYWORDS['in']} to be in {tokens}")
+
+    def parse_is(self, tokens):
+        start = self.find_words(tokens, *SWAPPED_KEYWORDS["is"])
+        dlzka = len(SWAPPED_KEYWORDS["is"])
+        end = start + dlzka
+        if start != 0 - 1:
+            left = self.parse_tokens(tokens[:start:])
+            right = self.parse_tokens(tokens[end::])
+            return IsNode(left, right)
+        else:
+            pass
+
+        raise SyntaxError(f"Expected {SWAPPED_KEYWORDS['is']} to be in {tokens}")
+
+    def parse_equality(self, tokens, operator):
+        start = self.find_words(tokens, *SWAPPED_KEYWORDS[operator])
+        dlzka = len(SWAPPED_KEYWORDS[operator])
+        end = start + dlzka
+        if start != 0 - 1:
+            left = self.parse_tokens(tokens[:start:])
+            right = self.parse_tokens(tokens[end::])
+            return Operation(left, right, operator)
+        else:
+            pass
+
+        raise SyntaxError(f"Expected {SWAPPED_KEYWORDS[operator]} to be in {tokens}")
+
 

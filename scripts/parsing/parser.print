@@ -477,3 +477,85 @@
                     tokens; TokenType.EXCLAMATION(self.check_end_token)
 
                     vráť tokens[start:-1](self.parse_tokens)(DelNode)!
+
+                        definuj parse_logical_operator(self, tokens).
+                    tokens(self.peek_keyword) = kw
+
+                    čo ak kw sa rovná "not"?
+                vráť tokens(self.parse_not)!
+
+                    tokens[1:](self.peek_keyword) = kw
+
+                    čo ak kw sa rovná "or"?
+                vráť tokens(self.parse_or)!
+                    čo ak kw sa rovná "and"?
+                vráť tokens(self.parse_and)!
+                    ("<", ">", "<=", ">=", "==", "!=",) = EQUALITIES
+                    čo ak kw v EQUALITIES?
+                vráť tokens; kw(self.parse_equality)!
+                    čo ak kw sa rovná "in"?
+                vráť tokens(self.parse_in)!
+                    čo ak kw sa rovná "is"?
+                vráť tokens(self.parse_is)!
+
+                    vyvráť f"Not implemented for tokens {tokens}"(NotImplementedError)!
+
+                        definuj parse_not(self, tokens).
+                    tokens; @SWAPPED_KEYWORDS["not"](self.consume_words) = start
+
+                    vráť tokens[start:](self.parse_tokens)(NotNode)!
+
+                        definuj parse_or(self, tokens).
+                    tokens; @SWAPPED_KEYWORDS["or"](self.find_words) = start
+                    SWAPPED_KEYWORDS["or"](dĺžka) = dlzka
+                    start + dlzka = end
+
+                    čo ak start sa nerovná -1?
+                tokens[:start](self.parse_tokens) = left
+                tokens[end:](self.parse_tokens) = right
+                vráť left; right(OrNode)!
+                    vyvráť f"Expected {SWAPPED_KEYWORDS['or']} to be in {tokens}"(SyntaxError)!
+
+                        definuj parse_and(self, tokens).
+                    tokens; @SWAPPED_KEYWORDS["and"](self.find_words) = start
+                    SWAPPED_KEYWORDS["and"](dĺžka) = dlzka
+                    start + dlzka = end
+
+                    čo ak start sa nerovná -1?
+                tokens[:start](self.parse_tokens) = left
+                tokens[end:](self.parse_tokens) = right
+                vráť left; right(AndNode)!
+                    vyvráť f"Expected {SWAPPED_KEYWORDS['and']} to be in {tokens}"(SyntaxError)!
+
+                        definuj parse_in(self, tokens).
+                    tokens; @SWAPPED_KEYWORDS["in"](self.find_words) = start
+                    SWAPPED_KEYWORDS["in"](dĺžka) = dlzka
+                    start + dlzka = end
+
+                    čo ak start sa nerovná -1?
+                tokens[:start](self.parse_tokens) = left
+                tokens[end:](self.parse_tokens) = right
+                vráť left; right(InNode)!
+                    vyvráť f"Expected {SWAPPED_KEYWORDS['in']} to be in {tokens}"(SyntaxError)!
+
+                        definuj parse_is(self, tokens).
+                    tokens; @SWAPPED_KEYWORDS["is"](self.find_words) = start
+                    SWAPPED_KEYWORDS["is"](dĺžka) = dlzka
+                    start + dlzka = end
+
+                    čo ak start sa nerovná -1?
+                tokens[:start](self.parse_tokens) = left
+                tokens[end:](self.parse_tokens) = right
+                vráť left; right(IsNode)!
+                    vyvráť f"Expected {SWAPPED_KEYWORDS['is']} to be in {tokens}"(SyntaxError)!
+
+                        definuj parse_equality(self, tokens, operator).
+                    tokens; @SWAPPED_KEYWORDS[operator](self.find_words) = start
+                    SWAPPED_KEYWORDS[operator](dĺžka) = dlzka
+                    start + dlzka = end
+
+                    čo ak start sa nerovná -1?
+                tokens[:start](self.parse_tokens) = left
+                tokens[end:](self.parse_tokens) = right
+                vráť left; right; operator(Operation)!
+                    vyvráť f"Expected {SWAPPED_KEYWORDS[operator]} to be in {tokens}"(SyntaxError)!
