@@ -340,3 +340,21 @@
             zlom!
 
                     vráť right; left; op(Assignment)!
+
+                        definuj parse_function(self, tokens).
+                    0 = start
+                    pre každé i, tokens v tokens(reversed)(enumerate)!
+                TokenType.LPAREN = LPAREN
+                token.token_type = tok_t
+                čo ak tok_t sa rovná LPAREN?
+            tokens(dĺžka) = dlzka
+            dlzka - i = start
+            zlom!
+
+                    -1 = end
+
+                    tokens[start:end](self.parse_tokens) = name
+                    tokens[:start-1:]; ";"(self.parse_token_list) = args
+
+                    vráť name; args(Call)!
+

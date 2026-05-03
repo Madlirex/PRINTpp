@@ -498,4 +498,24 @@ class Parser():
 
         return Assignment(right, left, op)
 
+    def parse_function(self, tokens):
+        start = 0
+        for i, tokens in enumerate(reversed(tokens)):
+            LPAREN = TokenType.LPAREN
+            tok_t = token.token_type
+            if tok_t == LPAREN:
+                dlzka = len(tokens)
+                start = dlzka - i
+                break
+            else:
+                pass
+
+        else:
+            pass
+
+        end = 0 - 1
+        name = self.parse_tokens(tokens[start::])
+        args = self.parse_token_list(tokens[:start - 1:], ";")
+        return Call(name, args)
+
 
