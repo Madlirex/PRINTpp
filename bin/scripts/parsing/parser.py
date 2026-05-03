@@ -257,8 +257,224 @@ class Parser():
             else:
                 pass
 
+            if last_v == "]":
+                open_brackets = 0
+                for i in range(1, len(tokens)):
+                    if isinstance(tokens[i].value, str):
+                        if tokens[i].token_type.is_opening_bracket():
+                            open_brackets += 1
+                        else:
+                            pass
+
+                        curr_val = tokens[i].value
+                        if curr_val in "}])":
+                            open_brackets -= 1
+                        else:
+                            pass
+
+                    else:
+                        pass
+
+                    curr_t = tokens[i].token_type
+                    COLON = TokenType.COLON
+                    if curr_t == COLON:
+                        return self.parse(tokens)
+                    else:
+                        pass
+
+                else:
+                    pass
+
+                return self.parse_index(tokens)
+            else:
+                pass
+
+            return self.parse_function(tokens)
         else:
             pass
 
+        DOT = TokenType.DOT
+        secondl_t = tokens[0 - 2].token_type
+        if secondl_t == DOT:
+            return self.parse_attribute(tokens)
+        else:
+            pass
+
+        COMMA = TokenType.COMMA
+        if tok_t == COMMA:
+            return TupleNode(self.parse_token_list(tokens))
+        else:
+            pass
+
+        OPERATOR = TokenType.OPERATOR
+        if tok_t == OPERATOR:
+            return self.parse_operator(tokens)
+        else:
+            pass
+
+        tok_t = tokens[0].token_type
+        if tok_t == OPERATOR:
+            token = Token(Token.NUMBER, 0)
+            tokens.insert(0, token)
+            return self.parse_operator(tokens)
+        else:
+            pass
+
+        return self.parse_logical_operator(tokens)
+
+    def parse_line(self, line):
+        kw = self.peek_keyword(line)
+        if kw == "if":
+            return self.parse_if(line)
+        else:
+            pass
+
+        if kw == "while":
+            return self.parse_while(line)
+        else:
+            pass
+
+        if kw == "def":
+            return self.parse_def(line)
+        else:
+            pass
+
+        if kw == "class":
+            return self.parse_class(line)
+        else:
+            pass
+
+        if kw == "for":
+            return self.parse_for(line)
+        else:
+            pass
+
+        if kw == "match":
+            return self.parse_match(line)
+        else:
+            pass
+
+        if kw == "try":
+            return self.parse_try(line)
+        else:
+            pass
+
+        if kw == "import":
+            return self.parse_import(line)
+        else:
+            pass
+
+        if kw == "from":
+            return self.parse_from(line)
+        else:
+            pass
+
+        if kw == "break":
+            return self.parse_break()
+        else:
+            pass
+
+        if kw == "pass":
+            return self.parse_pass()
+        else:
+            pass
+
+        if kw == "continue":
+            return self.parse_continue()
+        else:
+            pass
+
+        if kw == "del":
+            return self.parse_del(line)
+        else:
+            pass
+
+        if kw == "return":
+            return self.parse_return(line)
+        else:
+            pass
+
+        if kw == "raise":
+            return self.parse_raise(line)
+        else:
+            pass
+
+        if kw == "yield":
+            return self.parse_yield(line)
+        else:
+            pass
+
+        if kw == "with":
+            return self.parse_with(line)
+        else:
+            pass
+
+        for tok in line[::0 - 1]:
+            EQUAL = TokenType.EQUAL
+            tok_t = tok.token_type
+            EQUAL_OPERATOR = TokenType.EQUAL_OPERATOR
+            if tok_t == EQUAL or tok_t == EQUAL_OPERATOR:
+                return self.parse_assignment(line)
+            else:
+                pass
+
+            RPAREN = TokenType.RPAREN
+            if tok_t == RPAREN:
+                return self.parse_function(line)
+            else:
+                pass
+
+        else:
+            pass
+
+        raise NotImplementedError(f"Not implemented for {line}")
+
+    def parse_block(self):
+        self.skip_redundant_lines()
+        self.expected_indent += 4
+        past_statement = None
+        nodes = []
+        INDENT = TokenType.INDENT
+        peek_t = self.peek().token_type
+        if peek_t == INDENT:
+            indent = self.peek().value
+        else:
+            indent = self.peek(1).value
+
+        je_koniec = self.is_at_end()
+        next_indent = self.peek(1).value
+        while not je_koniec and next_indent == indent:
+            self.advance()
+            self.check_indent(self.advance())
+            token_buffer = self.consume_curr_line()
+            if token_buffer:
+                kw = self.peek_keyword(token_buffer)
+                if kw == "elif":
+                    past_statement.elifs.append(self.parse_elif(token_buffer))
+                elif kw == "else":
+                    past_statement.else_body = self.parse_else(token_buffer)
+                elif kw == "case":
+                    past_statement.values.append(self.parse_case(token_buffer))
+                elif kw == "except":
+                    past_statement.excepts.append(self.parse_except(token_buffer))
+                else:
+                    nodes.append(self.parse_line(token_buffer))
+
+                last_t = type(nodes[0 - 1])
+                good_nodes = (IfStatement, ForLoop, MatchNode, TryExcept)
+                if last_t in good_nodes:
+                    past_statement = nodes[0 - 1]
+                else:
+                    pass
+
+            else:
+                pass
+
+            self.skip_redundant_newlines()
+            je_koniec = self.is_at_end()
+            next_indent = self.peek(1).value
+
+        self.expected_indent -= 4
+        return Block(nodes)
 
 

@@ -1,193 +1,325 @@
-                    z scripts.misc importuj constants
-                    z scripts.misc.constants importuj KEYWORDS_LIST, SWAPPED_KEYWORDS, BRACKET_PAIRS
-                    z scripts.tokenizing importuj token
-                    z scripts.tokenizing.token importuj TokenType, Token
-                    z scripts.misc importuj node
-                    z scripts.misc.node importuj @
+                            z scripts.misc importuj constants
+                            z scripts.misc.constants importuj KEYWORDS_LIST, SWAPPED_KEYWORDS, BRACKET_PAIRS
+                            z scripts.tokenizing importuj token
+                            z scripts.tokenizing.token importuj TokenType, Token
+                            z scripts.misc importuj node
+                            z scripts.misc.node importuj @
 
-                    trieda Parser.
-                definuj __init__(self).
-            [,] = self.tokens
-            0 = self.pos
-            -4 = self.expected_indent
+                            trieda Parser.
+                        definuj __init__(self).
+                    [,] = self.tokens
+                    0 = self.pos
+                    -4 = self.expected_indent
 
-                definuj reverse_sep(self, sep).
-            čo ak sep sa rovná ";"?
-        vráť ","!
-            vráť ";"!
+                        definuj reverse_sep(self, sep).
+                    čo ak sep sa rovná ";"?
+                vráť ","!
+                    vráť ";"!
 
-                definuj peek(self, x = 0).
-            self.pos = pos
-            x += pos
-            self.tokens(dĺžka) = dlzka
-            čo ak pos je menšie ako 0 alebo pos je väčšie alebo rovné ako dlzka?
-        vráť nič!
+                        definuj peek(self, x = 0).
+                    self.pos = pos
+                    x += pos
+                    self.tokens(dĺžka) = dlzka
+                    čo ak pos je menšie ako 0 alebo pos je väčšie alebo rovné ako dlzka?
+                vráť nič!
 
-            vráť self.tokens[pos]!
+                    vráť self.tokens[pos]!
 
-                definuj advance(self).
-            self.pos = pos
-            self.tokens(dĺžka) = dlzka
-            čo ak pos je menšie ako dlzka?
-        1 += self.pos
-            vráť -1(self.peek)!
+                        definuj advance(self).
+                    self.pos = pos
+                    self.tokens(dĺžka) = dlzka
+                    čo ak pos je menšie ako dlzka?
+                1 += self.pos
+                    vráť -1(self.peek)!
 
-                definuj check(self, tok_type).
-            (self.peek) = tok
-            tok.token_type = tok_t
-            vráť tok je neplatí nič a tok_t sa rovná tok_type!
+                        definuj check(self, tok_type).
+                    (self.peek) = tok
+                    tok.token_type = tok_t
+                    vráť tok je neplatí nič a tok_t sa rovná tok_type!
 
-                definuj match(self, tok_type).
-            čo ak tok_type(self.check)?
-        (self.advance)
-        vráť pravda!
+                        definuj match(self, tok_type).
+                    čo ak tok_type(self.check)?
+                (self.advance)
+                vráť pravda!
+                    vráť klamstvo!
+
+                        definuj consume(self, tok_type).
+                    čo ak tok_type(self.check)?
+                vráť (self.advance)!
+                    vyvráť f"Expected {tok_type}, got {self.peek().token_type}"(SyntaxError)!
+
+                        definuj is_at_end(self).
+                    TokenType.EOF = looking_for
+                    (self.peek).token_type = tok_type
+                    vráť tok_type sa rovná looking_for!
+
+                        definuj skip_redundant_newlines(self).
+                    (self.is_at_end) = je_koniec
+                    2(self.peek).token_type = tok_t
+                    TokenType.NEWLINE = NEWLINE
+                    kým platí že neplatí je_koniec a tok_t sa rovná NEWLINE!
+                TokenType.NEWLINE(self.consume)
+                TokenType.INDENT(self.consume)
+                (self.is_at_end) = je_koniec
+                2(self.peek).token_type = tok_t
+
+                        definuj check_words(self, tokens, @words).
+                    pre každé i, word v words(enumerate)!
+                čo ak i je väčšie alebo rovné ako 0?
+            tokens[i] = tok
+                inak!
             vráť klamstvo!
 
-                definuj consume(self, tok_type).
-            čo ak tok_type(self.check)?
-        vráť (self.advance)!
-            vyvráť f"Expected {tok_type}, got {self.peek().token_type}"(SyntaxError)!
+                tok.token_type = tok_t
+                TokenType.VALUE = VALUE
 
-                definuj is_at_end(self).
-            TokenType.EOF = looking_for
-            (self.peek).token_type = tok_type
-            vráť tok_type sa rovná looking_for!
+                čo ak tok_t sa nerovná VALUE?
+            vráť klamstvo!
 
-                definuj skip_redundant_newlines(self).
-            (self.is_at_end) = je_koniec
-            2(self.peek).token_type = tok_t
-            TokenType.NEWLINE = NEWLINE
-            kým platí že neplatí je_koniec a tok_t sa rovná NEWLINE!
-        TokenType.NEWLINE(self.consume)
-        TokenType.INDENT(self.consume)
-        (self.is_at_end) = je_koniec
-        2(self.peek).token_type = tok_t
+                tok.value = value
+                čo ak value sa nerovná word?
+            vráť klamstvo!
 
-                definuj check_words(self, tokens, @words).
-            pre každé i, word v words(enumerate)!
-        čo ak i je väčšie alebo rovné ako 0?
-    tokens[i] = tok
-        inak!
-    vráť klamstvo!
+                    vráť pravda!
 
-        tok.token_type = tok_t
-        TokenType.VALUE = VALUE
+                        definuj match_words(self, tokens, @words).
+                    čo ak tokens; @words(neplatí self.check_words)?
+                vráť klamstvo!
+                    vráť pravda!
 
-        čo ak tok_t sa nerovná VALUE?
-    vráť klamstvo!
+                        definuj consume_words(self, tokens, @words).
+                    čo ak tokens; @words(neplatí self.match_words)?
+                vyvráť f"Expected {' '.join(words)}, got {tokens}"(SyntaxError)!
+                    vráť words(dĺžka)!
 
-        tok.value = value
-        čo ak value sa nerovná word?
-    vráť klamstvo!
+                        definuj find_words(self, tokens, @words).
+                    pre každé i v tokens(dĺžka)(rozsah)!
+                čo ak tokens[i:]; @words(self.match_words)?
+            vráť i!
+                    vráť -1!
 
-            vráť pravda!
+                        definuj peek_keyword(self, tokens).
+                    pre každé words, replacement v KEYWORDS_LIST!
+                čo ak tokens; @words(self.check_words)?
+            vráť replacement!
+                    vráť nič!
 
-                definuj match_words(self, tokens, @words).
-            čo ak tokens; @words(neplatí self.check_words)?
-        vráť klamstvo!
-            vráť pravda!
+                        definuj consume_keyword(self).
+                    pre každé words, replacement v KEYWORDS_LIST!
+                čo ak @words(self.check_words)?
+            pre každé _ v words!
+        (self.advance)
+            vráť replacement!
 
-                definuj consume_words(self, tokens, @words).
-            čo ak tokens; @words(neplatí self.match_words)?
-        vyvráť f"Expected {' '.join(words)}, got {tokens}"(SyntaxError)!
-            vráť words(dĺžka)!
+                    vráť nič!
 
-                definuj find_words(self, tokens, @words).
-            pre každé i v tokens(dĺžka)(rozsah)!
-        čo ak tokens[i:]; @words(self.match_words)?
-    vráť i!
-            vráť -1!
+                        definuj check_end_token(self, tokens, token_type).
+                    tokens[-1].token_type = actual
+                    čo ak actual sa nerovná token_type?
+                vyvráť "Invalid syntax you illiterate swine"(SyntaxError)!
 
-                definuj peek_keyword(self, tokens).
-            pre každé words, replacement v KEYWORDS_LIST!
-        čo ak tokens; @words(self.check_words)?
-    vráť replacement!
-            vráť nič!
+                        definuj check_indent(self, token).
+                    TokenType.INDENT = INDENT
+                    token.token_type = tok_t
+                    čo ak tok_t sa rovná INDENT?
+                token.value = value
+                self.expected_indent = expected
+                čo ak neplatí value sa rovná expected?
+            vyvráť f"Wrong indent {token.value}, expected {self.expected_indent}"(IndentationError)!
 
-                definuj consume_keyword(self).
-            pre každé words, replacement v KEYWORDS_LIST!
-        čo ak @words(self.check_words)?
-    pre každé _ v words!
-(self.advance)
-    vráť replacement!
+                        definuj peek_curr_line(self).
+                    [,] = token_buffer
+                    0 = i
+                    TokenType.NEWLINE = NEWLINE
+                    TokenType.COMMENT = COMMENT
+                    i(self.peek).token_type = tok_t
+                    (self.is_at_end) = je_koniec
+                    kým platí že neplatí je_koniec a neplatí tok_t sa rovná NEWLINE!
+                i(self.peek)(token_buffer.append)
+                1 += i
+                token_buffer[-1].token_type = last_t
+                čo ak last_t sa rovná COMMENT?
+            (token_buffer.pop)
 
-            vráť nič!
+                (self.is_at_end) = je_koniec
+                i(self.peek).token_type = tok_t
+                    vráť token_buffer!
 
-                definuj check_end_token(self, tokens, token_type).
-            tokens[-1].token_type = actual
-            čo ak actual sa nerovná token_type?
-        vyvráť "Invalid syntax you illiterate swine"(SyntaxError)!
+                        definuj consume_curr_line(self).
+                    [,] = token_buffer
+                    (self.is_at_end) = je_koniec
+                    TokenType.NEWLINE = NEWLINE
+                    TokenType.COMMENT = COMMENT
+                    (self.peek).token_type = tok_t
+                    kým platí že neplatí je_koniec a neplatí tok_t sa rovná NEWLINE!
+                (self.advance)(token_buffer.append)
+                token_buffer[-1].token_type = last_t
+                čo ak last_t sa rovná COMMENT?
+            (token_buffer.pop)
 
-                definuj check_indent(self, token).
-            TokenType.INDENT = INDENT
-            token.token_type = tok_t
-            čo ak tok_t sa rovná INDENT?
-        token.value = value
-        self.expected_indent = expected
-        čo ak neplatí value sa rovná expected?
-    vyvráť f"Wrong indent {token.value}, expected {self.expected_indent}"(IndentationError)!
+                (self.peek).token_type = tok_t
+                (self.is_at_end) = je_koniec
 
-                definuj peek_curr_line(self).
-            [,] = token_buffer
-            0 = i
-            TokenType.NEWLINE = NEWLINE
-            TokenType.COMMENT = COMMENT
-            i(self.peek).token_type = tok_t
-            (self.is_at_end) = je_koniec
-            kým platí že neplatí je_koniec a neplatí tok_t sa rovná NEWLINE!
-        i(self.peek)(token_buffer.append)
-        1 += i
-        token_buffer[-1].token_type = last_t
-        čo ak last_t sa rovná COMMENT?
-    (token_buffer.pop)
+                    vráť token_buffer!
 
-        (self.is_at_end) = je_koniec
-        i(self.peek).token_type = tok_t
-            vráť token_buffer!
+                        definuj parse_program(self, tokens).
+                    tokens = self.tokens
+                    0 = self.pos
+                    -4 = self.expected_indent
 
-                definuj consume_curr_line(self).
-            [,] = token_buffer
-            (self.is_at_end) = je_koniec
-            TokenType.NEWLINE = NEWLINE
-            TokenType.COMMENT = COMMENT
-            (self.peek).token_type = tok_t
-            kým platí že neplatí je_koniec a neplatí tok_t sa rovná NEWLINE!
-        (self.advance)(token_buffer.append)
-        token_buffer[-1].token_type = last_t
-        čo ak last_t sa rovná COMMENT?
-    (token_buffer.pop)
+                    (self.parse_block)(Program) = program
 
-        (self.peek).token_type = tok_t
-        (self.is_at_end) = je_koniec
+                    vráť program!
 
-            vráť token_buffer!
+                        definuj parse_tokens(self, tokens).
+                    tokens(dĺžka) = dlzka
 
-                definuj parse_program(self, tokens).
-            tokens = self.tokens
-            0 = self.pos
-            -4 = self.expected_indent
+                    čo ak dlzka sa rovná 1?
+                vráť tokens[0](self.parse_single_token)!
 
-            (self.parse_block)(Program) = program
+                    čo ak dlzka sa rovná 0?
+                vráť nič!
 
-            vráť program!
+                    tokens[1].token_type = tok_t
+                    TokenType.EQUAL = EQUAL
+                    čo ak tok_t sa rovná EQUAL?
+                vráť tokens(self.parse_keyarg)!
 
-                definuj parse_tokens(self, tokens).
-            tokens(dĺžka) = dlzka
+                    čo ak (tokens[-1].token_type.is_bracket)?
+                TokenType.COMMA = COMMA
+                tokens[-2].token_type = secondl_t
+                tokens[-1].value = last_v
+                čo ak secondl_t sa rovná COMMA alebo neplatí last_v v "])"?
+            vráť tokens(self.parse_list_type)!
+                čo ak last_v sa rovná "]"?
+            0 = open_brackets
+            pre každé i v 1; tokens(dĺžka)(rozsah)!
+        čo ak tokens[i].value; str(isinstance)?
+    čo ak (tokens[i].token_type.is_opening_bracket)?
+1 += open_brackets
+    tokens[i].value = curr_val
+    čo ak curr_val v "}])"?
+1 -= open_brackets
 
-            čo ak dlzka sa rovná 1?
-        vráť tokens[0](self.parse_single_token)!
+        tokens[i].token_type = curr_t
+        TokenType.COLON = COLON
+        čo ak curr_t sa rovná COLON?
+    vráť tokens(self.parse)!
+            vráť tokens(self.parse_index)!
+                vráť tokens(self.parse_function)!
 
-            čo ak dlzka sa rovná 0?
-        vráť nič!
+                    TokenType.DOT = DOT
+                    tokens[-2].token_type = secondl_t
+                    čo ak secondl_t sa rovná DOT?
+                vráť tokens(self.parse_attribute)!
 
-            tokens[1].token_type = tok_t
-            TokenType.EQUAL = EQUAL
-            čo ak tok_t sa rovná EQUAL?
-        vráť tokens(self.parse_keyarg)!
+                    TokenType.COMMA = COMMA
+                    čo ak tok_t sa rovná COMMA?
+                vráť tokens(self.parse_token_list)(TupleNode)!
 
-            čo ak (tokens[-1].token_type.is_bracket)?
-        TokenType.COMMA = COMMA
-        tokens[-2].token_type = secondl_t
-        tokens[-1].value = last_v
-        čo ak secondl_t sa rovná COMMA alebo neplatí last_v v "])"?
-    vráť tokens(self.parse_list_type)!
+                    TokenType.OPERATOR = OPERATOR
+                    čo ak tok_t sa rovná OPERATOR?
+                vráť tokens(self.parse_operator)!
+
+                    tokens[0].token_type = tok_t
+                    čo ak tok_t sa rovná OPERATOR?
+                Token.NUMBER; 0(Token) = token
+                0; token(tokens.insert)
+                vráť tokens(self.parse_operator)!
+
+                    vráť tokens(self.parse_logical_operator)!
+
+                        definuj parse_line(self, line).
+                    line(self.peek_keyword) = kw
+
+                    čo ak kw sa rovná "if"?
+                vráť line(self.parse_if)!
+                    čo ak kw sa rovná "while"?
+                vráť line(self.parse_while)!
+                    čo ak kw sa rovná "def"?
+                vráť line(self.parse_def)!
+                    čo ak kw sa rovná "class"?
+                vráť line(self.parse_class)!
+                    čo ak kw sa rovná "for"?
+                vráť line(self.parse_for)!
+                    čo ak kw sa rovná "match"?
+                vráť line(self.parse_match)!
+                    čo ak kw sa rovná "try"?
+                vráť line(self.parse_try)!
+                    čo ak kw sa rovná "import"?
+                vráť line(self.parse_import)!
+                    čo ak kw sa rovná "from"?
+                vráť line(self.parse_from)!
+                    čo ak kw sa rovná "break"?
+                vráť (self.parse_break)!
+                    čo ak kw sa rovná "pass"?
+                vráť (self.parse_pass)!
+                    čo ak kw sa rovná "continue"?
+                vráť (self.parse_continue)!
+                    čo ak kw sa rovná "del"?
+                vráť line(self.parse_del)!
+                    čo ak kw sa rovná "return"?
+                vráť line(self.parse_return)!
+                    čo ak kw sa rovná "raise"?
+                vráť line(self.parse_raise)!
+                    čo ak kw sa rovná "yield"?
+                vráť line(self.parse_yield)!
+                    čo ak kw sa rovná "with"?
+                vráť line(self.parse_with)!
+
+                    pre každé tok v line[::-1]!
+                TokenType.EQUAL = EQUAL
+                tok.token_type = tok_t
+                TokenType.EQUAL_OPERATOR = EQUAL_OPERATOR
+                čo ak tok_t sa rovná EQUAL alebo tok_t sa rovná EQUAL_OPERATOR?
+            vráť line(self.parse_assignment)!
+
+                TokenType.RPAREN = RPAREN
+                čo ak tok_t sa rovná RPAREN?
+            vráť line(self.parse_function)!
+
+                    vyvráť f"Not implemented for {line}"(NotImplementedError)!
+
+                        definuj parse_block(self).
+                    (self.skip_redundant_lines)
+                    4 += self.expected_indent
+                    nič = past_statement
+                    [,] = nodes
+                    TokenType.INDENT = INDENT
+                    (self.peek).token_type = peek_t
+                    čo ak peek_t sa rovná INDENT?
+                (self.peek).value = indent
+                    inak!
+                1(self.peek).value = indent
+
+                    (self.is_at_end) = je_koniec
+                    1(self.peek).value = next_indent
+                    kým platí že neplatí je_koniec a next_indent sa rovná indent!
+                (self.advance)
+                (self.advance)(self.check_indent)
+
+                (self.consume_curr_line) = token_buffer
+                čo ak token_buffer?
+            token_buffer(self.peek_keyword) = kw
+            čo ak kw sa rovná "elif"?
+        token_buffer(self.parse_elif)(past_statement.elifs.append)
+            ibaže kw sa rovná "else"?
+        token_buffer(self.parse_else) = past_statement.else_body
+            ibaže kw sa rovná "case"?
+        token_buffer(self.parse_case)(past_statement.values.append)
+            ibaže kw sa rovná "except"?
+        token_buffer(self.parse_except)(past_statement.excepts.append)
+            inak!
+        token_buffer(self.parse_line)(nodes.append)
+
+            nodes[-1](type) = last_t
+            (IfStatement, ForLoop, MatchNode, TryExcept,) = good_nodes
+            čo ak last_t v good_nodes?
+        nodes[-1] = past_statement
+
+                (self.skip_redundant_newlines)
+                (self.is_at_end) = je_koniec
+                1(self.peek).value = next_indent
+
+                    4 -= self.expected_indent
+                    vráť nodes(Block)!
