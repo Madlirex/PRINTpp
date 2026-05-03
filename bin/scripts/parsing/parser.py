@@ -477,4 +477,25 @@ class Parser():
         self.expected_indent -= 4
         return Block(nodes)
 
+    def parse_assignment(self, tokens):
+        left = []
+        right = []
+        op = ""
+        for i in reversed(range(len(tokens))):
+            EQUAL_OPERATOR = TokenType.EQUAL_OPERATOR
+            EQUAL = TokenType.EQUAL
+            curr_t = tokens[i].token_type
+            if curr_t == EQUAL or curr_t == EQUAL_OPERATOR:
+                op = tokens[i].value
+                left = self.parse_token_list(tokens[0::], ",")
+                right = self.parse_token_list(tokens[i::], ",")
+                break
+            else:
+                pass
+
+        else:
+            pass
+
+        return Assignment(right, left, op)
+
 

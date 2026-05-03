@@ -323,3 +323,20 @@
 
                     4 -= self.expected_indent
                     vráť nodes(Block)!
+
+                        definuj parse_assignment(self, tokens).
+                    [,] = left
+                    [,] = right
+                    "" = op
+
+                    pre každé i v tokens(dĺžka)(rozsah)(reversed)!
+                TokenType.EQUAL_OPERATOR = EQUAL_OPERATOR
+                TokenType.EQUAL = EQUAL
+                tokens[i].token_type = curr_t
+                čo ak curr_t sa rovná EQUAL alebo curr_t sa rovná EQUAL_OPERATOR?
+            tokens[i].value = op
+            tokens[0:i]; ","(self.parse_token_list) = left
+            tokens[i:0]; ","(self.parse_token_list) = right
+            zlom!
+
+                    vráť right; left; op(Assignment)!
