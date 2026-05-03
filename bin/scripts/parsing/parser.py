@@ -528,4 +528,42 @@ class Parser():
         right = self.parse_single_token(tokens[2])
         return Operation(left, right, tokens[1].value)
 
+    def parse_index(self, tokens):
+        start = 1
+        open_brackets = 0
+        for i in range(1, len(tokens))[::0 - 1]:
+            if isinstance(tokens[i].value, str):
+                curr_v = tokens[i].value
+                if curr_v in "{(":
+                    open_brackets += 1
+                else:
+                    pass
+
+                if curr_v in "})":
+                    open_brackets -= 1
+                else:
+                    pass
+
+            else:
+                pass
+
+            curr_v = tokens[i].value
+            if curr_v == "[" and open_brackets == 0:
+                start = i
+                break
+            else:
+                pass
+
+        else:
+            pass
+
+        obj = self.parse_tokens(tokens[::])
+        index = self.parse_tokens(tokens[start + 1::])
+        return Index(obj, index)
+
+    def parse_keyarg(self, tokens):
+        obj = self.parse_single_token(tokens[0])
+        value = self.parse_tokens(tokens[2::])
+        return KeyArg(obj, value)
+
 

@@ -367,3 +367,30 @@
                     tokens[0](self.parse_single_token) = left
                     tokens[2](self.parse_single_token) = right
                     vráť left; right; tokens[1].value(Operation)!
+
+                        definuj parse_index(self, tokens).
+                    1 = start
+                    0 = open_brackets
+
+
+                    pre každé i v 1; tokens(dĺžka)(rozsah)[::-1]!
+                čo ak tokens[i].value; str(isinstance)?
+            tokens[i].value = curr_v
+            čo ak curr_v v "{("?
+        1 += open_brackets
+            čo ak curr_v v "})"?
+        1 -= open_brackets
+
+                tokens[i].value = curr_v
+                čo ak curr_v sa rovná "[" a open_brackets sa rovná 0?
+            i = start
+            zlom!
+
+                    tokens[:start](self.parse_tokens) = obj
+                    tokens[start + 1:-1](self.parse_tokens) = index
+                    vráť obj; index(Index)!
+
+                        definuj parse_keyarg(self, tokens).
+                    tokens[0](self.parse_single_token) = obj
+                    tokens[2:](self.parse_tokens) = value
+                    vráť obj; value(KeyArg)!
