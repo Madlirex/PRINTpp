@@ -642,4 +642,33 @@ class Parser():
 
         return Slice(self.parse_tokens(tokens[:x:]), start, end, step)
 
+    def parse_pass(self):
+        return Pass()
+
+    def parse_continue(self):
+        return Continue()
+
+    def parse_break(self):
+        return Break()
+
+    def parse_return(self, tokens):
+        start = self.match_words(tokens, *SWAPPED_KEYWORDS["return"])
+        self.check_end_token(tokens, TokenType.EXCLAMATION)
+        return Return(self.parse_tokens(tokens[start:0 - 1:]))
+
+    def parse_raise(self, tokens):
+        start = self.match_words(tokens, *SWAPPED_KEYWORDS["raise"])
+        self.check_end_token(tokens, TokenType.EXCLAMATION)
+        return Raise(self.parse_tokens(tokens[start:0 - 1:]))
+
+    def parse_yield(self, tokens):
+        start = self.match_words(tokens, *SWAPPED_KEYWORDS["yield"])
+        self.check_end_token(tokens, TokenType.EXCLAMATION)
+        return Yield(self.parse_tokens(tokens[start:0 - 1:]))
+
+    def parse_del(self, tokens):
+        start = self.match_words(tokens, *SWAPPED_KEYWORDS['del'])
+        self.check_end_token(tokens, TokenType.EXCLAMATION)
+        return DelNode(self.parse_tokens(tokens[start:0 - 1:]))
+
 
