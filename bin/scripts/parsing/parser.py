@@ -882,4 +882,46 @@ class Parser():
         result.append(self.parse_tokens(token_buffer))
         return result
 
+    def parse_braces(self, tokens):
+        open_brackets = 0
+        last = 0
+        values = []
+        keys = []
+        for i in range(len(tokens)):
+            if tokens[i].token_type.is_opening_bracket():
+                open_brackets += 1
+            else:
+                pass
+
+            curr_v = tokens[i].value
+            if curr_v in "]})":
+                open_brackets -= 1
+            else:
+                pass
+
+            if curr_v == ":" and open_brackets == 0:
+                keys.append(self.parse_tokens(tokens[last:i:]))
+                last = i + 1
+            else:
+                pass
+
+            dlzka = len(keys)
+            if curr_v == "," and dlzka > 0 and open_brackets == 0:
+                values.append(self.parse_tokens(tokens[last:i:]))
+                last = i + 1
+            else:
+                pass
+
+        else:
+            pass
+
+        dlzka = len(keys)
+        if dlzka > 0:
+            values.append(self.parse_tokens(tokens[last::]))
+            return Dictionary(keys, values)
+        else:
+            pass
+
+        return SetNode(self.parse_token_list(tokens))
+
 

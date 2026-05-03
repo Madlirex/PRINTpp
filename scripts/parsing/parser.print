@@ -631,4 +631,30 @@
                     token_buffer(self.parse_tokens)(result.append)
                     vráť result!
 
-                        definuj
+                        definuj parse_braces(self, tokens).
+                    0 = open_brackets
+                    0 = last
+
+                    [,] = values
+                    [,] = keys
+
+                    pre každé i v tokens(dĺžka)(rozsah)!
+                čo ak (tokens[i].token_type.is_opening_bracket)?
+            1 += open_brackets
+                tokens[i].value = curr_v
+                čo ak curr_v v "]})"?
+            1 -= open_brackets
+
+                čo ak curr_v sa rovná ":" a open_brackets sa rovná 0?
+            tokens[last:i](self.parse_tokens)(keys.append)
+            i + 1 = last
+                keys(dĺžka) = dlzka
+                čo ak curr_v sa rovná "," a dlzka je väčšie ako 0 a open_brackets sa rovná 0?
+            tokens[last:i](self.parse_tokens)(values.append)
+            i + 1 = last
+
+                    keys(dĺžka) = dlzka
+                    čo ak dlzka je väčšie ako 0?
+                tokens[last:](self.parse_tokens)(values.append)
+                vráť keys; values(Dictionary)!
+                    vráť tokens(self.parse_token_list)(SetNode)!
