@@ -167,4 +167,51 @@ class Transpiler():
     def visit_operation(self, node):
         return f"{self.transpile(node.left)} {node.operator} {self.transpile(node.right)}"
 
+    def visit_none(self, node):
+        return "None"
+
+    def visit_bool(self, node):
+        return str(node.value)
+
+    def visit_number(self, node):
+        return str(node.value)
+
+    def visit_string(self, node):
+        return node.value
+
+    def visit_variable(self, node):
+        return node.name
+
+    def visit_list(self, node):
+        return f"[{self.transpile_nodes(node.values)}]"
+
+    def visit_tuple(self, node):
+        return f"({self.transpile_nodes(node.values)})"
+
+    def visit_set(self, node):
+        values = self.transpile_nodes(node.value)
+        return "{" + values
+
+    def visit_dict(self, node):
+        result = "{"
+        try:
+            for i in range(len(node.keys)):
+                result += f"{self.transpile(node.keys[i])}: {self.transpile(node.values[i])}, "
+            else:
+                pass
+
+        except IndexError:
+            raise ValueError("Not enough values to unpack from dictionary. There are more keys than values.")
+
+        if result.endswith(", "):
+            result = result[:0 - 2:]
+        else:
+            pass
+
+        result += "}"
+        return result
+
+    def parse_keyarg(self, node):
+        return f"{self.transpile(node.variable)} = {self.transpile(node.value)}"
+
 

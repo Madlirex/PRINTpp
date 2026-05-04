@@ -140,3 +140,47 @@ first = prefix
 
             definuj visit_operation(self, node).
         vráť f"{self.transpile(node.left)} {node.operator} {self.transpile(node.right)}"!
+
+            definuj visit_none(self, node).
+        vráť "None"!
+
+            definuj visit_bool(self, node).
+        vráť node.value(str)!
+
+            definuj visit_number(self, node).
+        vráť node.value(str)!
+
+            definuj visit_string(self, node).
+        vráť node.value!
+
+            definuj visit_variable(self, node).
+        vráť node.name!
+
+            definuj visit_list(self, node).
+        vráť f"[{self.transpile_nodes(node.values)}]"!
+
+            definuj visit_tuple(self, node).
+        vráť f"({self.transpile_nodes(node.values)})"!
+
+            definuj visit_set(self, node).
+        node.value(self.transpile_nodes) = values
+        vráť "{" + values + "}"!
+
+            definuj visit_dict(self, node).
+        "{" = result
+
+        skús!
+    pre každé i v node.keys(dĺžka)(rozsah)!
+f"{self.transpile(node.keys[i])}: {self.transpile(node.values[i])}, " += result
+
+        okrem IndexError?
+    vyvráť "Not enough values to unpack from dictionary. There are more keys than values."(ValueError)!
+
+        čo ak ", "(result.endswith)?
+    result[:-2] = result
+
+        "}" += result
+        vráť result!
+
+            definuj parse_keyarg(self, node).
+        vráť f"{self.transpile(node.variable)} = {self.transpile(node.value)}"!
