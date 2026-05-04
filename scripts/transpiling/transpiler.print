@@ -65,4 +65,78 @@ transpiled + "\n"(self.emit) += result
 
         vráť result!
 
+            definuj visit_assignment(self, node).
+        vráť f"{self.transpile_nodes(node.left)} {node.operator} {self.transpile_nodes(node.right)}"!
 
+            definuj visit_attribute(self, node).
+        vráť f"{self.transpile(node.obj)}.{node.name}"!
+
+            definuj visit_call(self, node).
+        čo ak node.func; String(isinstance)?
+    node.func.value[-1] = quotes
+    "" = prefix
+    node.func.value[0] = first
+    čo ak first sa nerovná quotes?
+first = prefix
+
+    vráť f"{node.func.value[len(prefix)+1:-1]}({prefix}{quotes}{self.transpile_nodes(node.args)}{quotes})"!
+
+        node.func(self.transpile) = name
+        čo ak name v RENAMES?
+    RENAMES[name] = name
+        ibaže name v INVALID_RENAMES?
+    vyvráť f"Use '{INVALID_RENAMES[name]}' instead of '{name}'"(RuntimeError)!
+
+        vráť f"{name}({self.transpile_nodes(node.args)})"!
+
+            definuj visit_index(self, node).
+        vráť f"{self.transpile(node.obj)}[{self.transpile(node.index)}]"!
+
+            definuj visit_slice(self, node).
+        "", "", "" = start, end, step
+        čo ak node.start?
+    node.start(self.transpile) = start
+        čo ak node.end?
+    node.end(self.transpile) = end
+        čo ak node.step?
+    node.step(self.transpile) = step
+        vráť f"{self.transpile(node.obj)}[{start}:{end}:{step}]"!
+
+            definuj visit_pass(self).
+        vráť "pass"!
+
+            definuj visit_continue(self).
+        vráť "continue"!
+
+            definuj visit_break(self).
+        vráť "break"!
+
+            definuj visit_return(self, node).
+        vráť f"return {self.transpile(node.value)}"!
+
+            definuj visit_yield(self, node).
+        vráť f"yield {self.transpile(node.value)}"!
+
+            definuj visit_raise(self, node).
+        vráť f"raise {self.transpile(node.value)}"!
+
+            definuj visit_del(self, node).
+        vráť f"del {self.transpile(node.value)}"!
+
+            definuj visit_in(self, node).
+        vráť f"{self.transpile(node.left)} in {self.transpile(node.right)}"!
+
+            definuj visit_is(self, node).
+        vráť f"{self.transpile(node.left)} is {self.transpile(node.right)}"!
+
+            definuj visit_or(self, node).
+        vráť f"{self.transpile(node.left)} or {self.transpile(node.right)}"!
+
+            definuj visit_and(self, node).
+        vráť f"{self.transpile(node.left)} and {self.transpile(node.right)}"!
+
+            definuj visit_not(self, node).
+        vráť f"not {self.transpile(node.value)}"!
+
+            definuj visit_operation(self, node).
+        vráť f"{self.transpile(node.left)} {node.operator} {self.transpile(node.right)}"!
