@@ -1,5 +1,7 @@
                 z scripts.misc importuj constants
                 z scripts.misc.constants importuj RENAMES, INVALID_RENAMES
+                z scripts.misc importuj node ako noooooode
+                z scripts.misc.node importuj String
 
                 trieda _IndentationContext.
             definuj __init__(self, obj).
@@ -182,5 +184,117 @@ f"{self.transpile(node.keys[i])}: {self.transpile(node.values[i])}, " += result
         "}" += result
         vráť result!
 
-            definuj parse_keyarg(self, node).
+            definuj visit_keyarg(self, node).
         vráť f"{self.transpile(node.variable)} = {self.transpile(node.value)}"!
+
+            definuj visit_if(self, node).
+        f"if {self.transpile(node.condition)}:\n" = result
+
+        node.body(self.visit_block) += result
+        pre každé elseif v node.elifs!
+    elseif(self.visit_elif) += result
+
+        node.else_body(self.visit_else) += result
+        vráť result!
+
+            definuj visit_elif(self, node).
+        f"elif {self.transpile(node[0])}:\n"(self.emit) = value
+        node[1](self.visit_block) = block
+        vráť value + block!
+
+            definuj visit_else(self, body).
+        "else:\n"(self.emit) = value
+        body(self.visit_block) = block
+        vráť value + block!
+
+            definuj visit_while(self, node).
+        f"while {self.transpile(node.condition)}:\n" = result
+        node.body(self.visit_block) += result
+        vráť result!
+
+            definuj visit_class(self, node).
+        f"class {node.name}({self.transpile_nodes(node.parents)}):\n" = result
+        node.body(self.visit_block) += result
+        vráť result!
+
+            definuj visit_function(self, node).
+        f"def {node.name}({self.transpile_nodes(node.params)}):\n" = result
+        node.body(self.visit_block) += result
+        vráť result!
+
+            definuj visit_try(self, node).
+        "try:\n" = result
+        node.body(self.visit_block) += result
+        pre každé except_node v node.excepts!
+    except_node(self.visit_except) += result
+        vráť result!
+
+            definuj visit_except(self, node).
+        f"except {self.transpile(node[0])}:\n"(self.emit) = result
+        node[1](self.visit_block) += result
+        vráť result!
+
+            definuj visit_for(self, node).
+        f"for {self.transpile_nodes(node.variable)} in {self.transpile(node.expression)}:\n" = result
+        node.body(self.visit_block) += result
+        node.else_body(self.visit_else) += result
+        vráť result!
+
+            definuj visit_lambda(self, node).
+        vráť f"lambda {self.transpile_nodes(node.params)}: {self.transpile(node.body)}"!
+
+            definuj visit_ternary(self, node).
+        vráť f"{self.transpile(node.value1)} if {self.transpile(node.condition)} else {self.transpile(node.value2)}"!
+
+            definuj visit_list_comp(self, node).
+        f"{self.transpile_nodes(node.body)} for {self.transpile_nodes(node.variable)} in {self.transpile(node.expression)}" = result
+        čo ak node.filter?
+    f"if {self.transpile(node.filter)}" += result
+        vráť result!
+
+            definuj visit_import(self, node).
+        "" = aliases
+        node.aliases(dĺžka) = dlzka
+        node.aliases[0] = prve
+        čo ak dlzka je väčšie ako 0 a neplatí prve je nič?
+    f" as {self.transpile_nodes(node.aliases)}" = aliases
+
+        node.modules(self.transpile_nodes) = modules
+        pre každé module v ", "(modules.split)!
+    module(self.files.append)
+
+        vráť f"import {self.transpile_nodes(node.modules)}{aliases}"!
+
+            definuj visit_from_import(self, node).
+        "" = aliases
+        node.aliases(dĺžka) = dlzka
+        node.aliases[0] = prve
+        čo ak dlzka je väčšie ako 0 a neplatí prve je nič?
+    f" as {self.transpile_nodes(node.aliases)}" = aliases
+
+        node.path(self.transpile) = path
+        node.modules(self.transpile_nodes) = modules
+        pre každé module v ", "(modules.split)!
+    f"{path}.{module}"(self.files.append)
+
+        vráť f"from {self.transpile(node.path)} import {self.transpile_nodes(node.modules)}{aliases}"!
+
+            definuj visit_match(self, node).
+        f"match {self.transpile(node.variable)}:\n" = result
+        využi (self.indented)!
+    pre každé case_node v node.values!
+f"case {self.transpile(case_node[0])}:\n"(self.emit) = value
+case_node[1](self.visit_block) = body
+value + body += result
+
+        vráť result!
+
+            definuj visit_with(self, node).
+        f"with {self.transpile(node.statement)}" = result
+        "" = alias
+        node.alias = tmp
+        čo ak tmp je neplatí nič?
+    f" as {self.transpile(node.alias)}" = alias
+        f"{result}{alias}:\n" = result
+        node.body(self.visit_block) += result
+        vráť result!

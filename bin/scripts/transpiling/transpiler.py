@@ -1,5 +1,7 @@
 from scripts.misc import constants
 from scripts.misc.constants import RENAMES, INVALID_RENAMES
+from scripts.misc import node as noooooode
+from scripts.misc.node import String
 class _IndentationContext():
     def __init__(self, obj):
         self.obj = obj
@@ -211,7 +213,140 @@ class Transpiler():
         result += "}"
         return result
 
-    def parse_keyarg(self, node):
+    def visit_keyarg(self, node):
         return f"{self.transpile(node.variable)} = {self.transpile(node.value)}"
+
+    def visit_if(self, node):
+        result = f"if {self.transpile(node.condition)}:\n"
+        result += self.visit_block(node.body)
+        for elseif in node.elifs:
+            result += self.visit_elif(elseif)
+        else:
+            pass
+
+        result += self.visit_else(node.else_body)
+        return result
+
+    def visit_elif(self, node):
+        value = self.emit(f"elif {self.transpile(node[0])}:\n")
+        block = self.visit_block(node[1])
+        return value + block
+
+    def visit_else(self, body):
+        value = self.emit("else:\n")
+        block = self.visit_block(body)
+        return value + block
+
+    def visit_while(self, node):
+        result = f"while {self.transpile(node.condition)}:\n"
+        result += self.visit_block(node.body)
+        return result
+
+    def visit_class(self, node):
+        result = f"class {node.name}({self.transpile_nodes(node.parents)}):\n"
+        result += self.visit_block(node.body)
+        return result
+
+    def visit_function(self, node):
+        result = f"def {node.name}({self.transpile_nodes(node.params)}):\n"
+        result += self.visit_block(node.body)
+        return result
+
+    def visit_try(self, node):
+        result = "try:\n"
+        result += self.visit_block(node.body)
+        for except_node in node.excepts:
+            result += self.visit_except(except_node)
+        else:
+            pass
+
+        return result
+
+    def visit_except(self, node):
+        result = self.emit(f"except {self.transpile(node[0])}:\n")
+        result += self.visit_block(node[1])
+        return result
+
+    def visit_for(self, node):
+        result = f"for {self.transpile_nodes(node.variable)} in {self.transpile(node.expression)}:\n"
+        result += self.visit_block(node.body)
+        result += self.visit_else(node.else_body)
+        return result
+
+    def visit_lambda(self, node):
+        return f"lambda {self.transpile_nodes(node.params)}: {self.transpile(node.body)}"
+
+    def visit_ternary(self, node):
+        return f"{self.transpile(node.value1)} if {self.transpile(node.condition)} else {self.transpile(node.value2)}"
+
+    def visit_list_comp(self, node):
+        result = f"{self.transpile_nodes(node.body)} for {self.transpile_nodes(node.variable)} in {self.transpile(node.expression)}"
+        if node.filter:
+            result += f"if {self.transpile(node.filter)}"
+        else:
+            pass
+
+        return result
+
+    def visit_import(self, node):
+        aliases = ""
+        dlzka = len(node.aliases)
+        prve = node.aliases[0]
+        if dlzka > 0 and not prve is None:
+            aliases = f" as {self.transpile_nodes(node.aliases)}"
+        else:
+            pass
+
+        modules = self.transpile_nodes(node.modules)
+        for module in modules.split(", "):
+            self.files.append(module)
+        else:
+            pass
+
+        return f"import {self.transpile_nodes(node.modules)}{aliases}"
+
+    def visit_from_import(self, node):
+        aliases = ""
+        dlzka = len(node.aliases)
+        prve = node.aliases[0]
+        if dlzka > 0 and not prve is None:
+            aliases = f" as {self.transpile_nodes(node.aliases)}"
+        else:
+            pass
+
+        path = self.transpile(node.path)
+        modules = self.transpile_nodes(node.modules)
+        for module in modules.split(", "):
+            self.files.append(f"{path}.{module}")
+        else:
+            pass
+
+        return f"from {self.transpile(node.path)} import {self.transpile_nodes(node.modules)}{aliases}"
+
+    def visit_match(self, node):
+        result = f"match {self.transpile(node.variable)}:\n"
+        with self.indented():
+            for case_node in node.values:
+                value = self.emit(f"case {self.transpile(case_node[0])}:\n")
+                body = self.visit_block(case_node[1])
+                result += value + body
+            else:
+                pass
+
+
+        return result
+
+    def visit_with(self, node):
+        result = f"with {self.transpile(node.statement)}"
+        alias = ""
+        tmp = node.alias
+        if tmp is not None:
+            alias = f" as {self.transpile(node.alias)}"
+        else:
+            pass
+
+        result = f"{result}{alias}:\n"
+        result += self.visit_block(node.body)
+        return result
 
 
