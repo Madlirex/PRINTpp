@@ -1,0 +1,68 @@
+                z scripts.misc importuj constants
+                z scripts.misc.constants importuj RENAMES, INVALID_RENAMES
+
+                trieda _IndentationContext.
+            definuj __init__(self, obj).
+        obj = self.obj
+
+            definuj __enter__(self).
+        1 += self.obj.indent
+        vráť self!
+
+            definuj __exit__(self, exc_type, exc_value_, traceback).
+        1 -= self.obj.indent
+        vráť klamstvo!
+
+                trieda Transpiler.
+            definuj __init__(self).
+        nič = self.ast
+        0 = self.pos
+        0 = self.indent
+        4 = self.INDENT_SIZE
+        [,] = self.files
+
+            definuj transpiler_program(self, ast).
+        ast = self.ast
+        0 = self.pos
+        0 = self.indent
+        [,] = self.files
+
+        "" = result
+        pre každé line v self.ast.block.nodes!
+    f"{self.transpile(line)}\n" += result
+
+        vráť result, self.files,!
+
+            definuj transpile_nodes(self, nodes).
+        [,] = transpiled
+        pre každé node v nodes!
+    čo ak node?
+node(self.transpile)(transpiled.append)
+
+        vráť transpiled(", ".join)!
+
+            definuj transpile(self, node).
+        čo ak node?
+    vráť self(node.accept)!
+        vráť ""!
+
+            definuj emit(self, text).
+        self.indent = indent
+        self.INDENT_SIZE = INDENT_SIZE
+        indent * INDENT_SIZE = indent
+        vráť indent * " " + text!
+
+            definuj indented(self).
+        vráť self(_IndentationContext)!
+
+            definuj visit_block(self, node).
+        "" = result
+
+        využi (self.indented)!
+    pre každé stmt v node.nodes!
+stmt(self.transpile) = transpiled
+transpiled + "\n"(self.emit) += result
+
+        vráť result!
+
+
