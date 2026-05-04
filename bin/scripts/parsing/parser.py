@@ -940,4 +940,118 @@ class Parser():
         self.check_end_token(tokens, TokenType.EXCLAMATION)
         return self.parse_block()
 
+    def parse_while(self, tokens):
+        self.consume_words(tokens, *SWAPPED_KEYWORDS["while"])
+        self.check_end_token(tokens, TokenType.EXCLAMATION)
+        condition = self.parse_tokens(tokens[len(SWAPPED_KEYWORDS["while"]):0 - 1:])
+        return While(condition, self.parse_block())
+
+    def parse_def(self, tokens):
+        start = self.consume_words(tokens, *SWAPPED_KEYWORDS["def"])
+        self.check_end_token(tokens, TokenType.DOT)
+        name = tokens[start].value
+        params = self.parse_token_list(tokens[start + 2:0 - 2:])
+        return FunctionDef(name, self.parse_block(), params)
+
+    def parse_class(self, tokens):
+        start = self.consume_words(tokens, *SWAPPED_KEYWORDS["class"])
+        self.check_end_token(tokens, TokenType.DOT)
+        name = tokens[start].value
+        parents = self.parse_token_list(tokens[start + 2:0 - 2:])
+        return ClassDef(name, self.parse_block(), parents)
+
+    def parse_for(self, tokens):
+        start = self.consume_words(tokens, *SWAPPED_KEYWORDS["for"])
+        self.check_end_token(tokens, TokenType.EXCLAMATION)
+        end = 0
+        for i in reversed(range(len(tokens))):
+            if self.match_words(tokens[i::], *SWAPPED_KEYWORDS["in"]):
+                end = i
+            else:
+                pass
+
+        else:
+            pass
+
+        variables = self.parse_token_list(tokens[start:end:])
+        dlzka = len(SWAPPED_KEYWORDS["in"])
+        expression = self.parse_tokens(tokens[end + dlzka:0 - 1:])
+        return ForLoop(variables, expression, self.parse_block())
+
+    def parse_try(self, tokens):
+        start = self.consume_words(tokens, *SWAPPED_KEYWORDS["try"])
+        self.check_end_token(tokens, TokenType.EXCLAMATION)
+        return TryExcept(self.parse_block())
+
+    def parse_except(self, tokens):
+        start = self.consume_keywords(tokens, *SWAPPED_KEYWORDS["except"])
+        self.check_end_token(tokens, TokenType.QUESTION)
+        return (self.parse_tokens(tokens[start:0 - 1:]), self.parse_block())
+
+    def parse_match(self, tokens):
+        start = self.consume_words(tokens, *SWAPPED_KEYWORDS["match"])
+        self.check_end_token(tokens, TokenType.EXCLAMATION)
+        return MatchNode(self.parse_tokens(tokens[start:0 - 1:]), [])
+
+    def parse_case(self, tokens):
+        start = self.consume_words(tokens, *SWAPPED_KEYWORDS["case"])
+        self.check_end_token(tokens, TokenType.QUESTION)
+        return (self.parse_tokens(tokens[start:0 - 1:]), self.parse_block())
+
+    def parse_import(self, tokens):
+        start = self.consume_words(tokens, *SWAPPED_KEYWORDS["import"])
+        end = self.find_words(tokens, *SWAPPED_KEYWORDS["as"])
+        if end == 0 - 1:
+            end = len(tokens)
+        else:
+            pass
+
+        modules = self.parse_token_list(tokens[start:end:])
+        if end == 0 - 1:
+            end = len(tokens)
+        else:
+            end += len(SWAPPED_KEYWORDS["as"])
+
+        aliases = self.parse_token_list(tokens[end::])
+        return Import(modules, aliases)
+
+    def parse_from(self, tokens):
+        start = self.consume_words(tokens, *SWAPPED_KEYWORDS["from"])
+        end = self.find_words(tokens, *SWAPPED_KEYWORDS["import"])
+        path = self.parse_tokens(tokens[start:end:])
+        start = self.find_words(tokens[end::], *SWAPPED_KEYWORDS["as"])
+        if start == 0 - 1:
+            start = len(tokens)
+        else:
+            start += end
+
+        dlzka = len(SWAPPED_KEYWORDS["import"])
+        modules = self.parse_token_list(tokens[end + dlzka:start:])
+        if start == 0 - 1:
+            start = len(tokens)
+        else:
+            start += SWAPPED_KEYWORDS["as"]
+
+        aliases = self.parse_token_list(tokens[start::])
+        return FromImport(path, modules, aliases)
+
+    def parse_with(self, tokens):
+        start = self.consume_words(tokens, *SWAPPED_KEYWORDS["with"])
+        end = self.find_words(tokens, *SWAPPED_KEYWORDS["as"])
+        if end == 0 - 1:
+            end = len(tokens)
+        else:
+            pass
+
+        self.check_end_token(tokens, TokenType.EXCLAMATION)
+        statement = self.parse_tokens(tokens[start:end:])
+        if end == 0 - 1:
+            dlzka = len(tokens)
+            end = dlzka - 1
+        else:
+            end += len(SWAPPED_KEYWORDS["as"])
+
+        aliases = self.parse_tokens(tokens[end:0 - 1:])
+        return WithNode(statement, self.parse_block(), aliases)
+
 
