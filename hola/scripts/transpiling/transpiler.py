@@ -208,7 +208,7 @@ class Transpiler():
             raise ValueError("Not enough values to unpack from dictionary. There are more keys than values.")
 
         if result.endswith(", "):
-            result = result[::]
+            result = result[:0 - 2:]
         else:
             pass
 

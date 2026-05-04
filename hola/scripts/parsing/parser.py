@@ -519,7 +519,7 @@ class Parser():
             curr_t = tokens[i].token_type
             if curr_t == EQUAL or curr_t == EQUAL_OPERATOR:
                 op = tokens[i].value
-                left = self.parse_token_list(tokens[0::], ",")
+                left = self.parse_token_list(tokens[0:i:], ",")
                 right = self.parse_token_list(tokens[i + 1::], ",")
                 break
             else:
@@ -546,12 +546,12 @@ class Parser():
             pass
 
         end = 0 - 1
-        name = self.parse_tokens(tokens[start::])
+        name = self.parse_tokens(tokens[start:end:])
         args = self.parse_token_list(tokens[:start - 1:], ";")
         return Call(name, args)
 
     def parse_attribute(self, tokens):
-        obj = self.parse_tokens(tokens[::])
+        obj = self.parse_tokens(tokens[:0 - 2:])
         name = tokens[0 - 1].value
         return Attribute(obj, name)
 
@@ -589,8 +589,8 @@ class Parser():
         else:
             pass
 
-        obj = self.parse_tokens(tokens[::])
-        index = self.parse_tokens(tokens[start + 1::])
+        obj = self.parse_tokens(tokens[:start:])
+        index = self.parse_tokens(tokens[start + 1:0 - 1:])
         return Index(obj, index)
 
     def parse_keyarg(self, tokens):
@@ -660,19 +660,19 @@ class Parser():
         else:
             pass
 
-        start = self.parse_tokens(tokens[x + 1::])
+        start = self.parse_tokens(tokens[x + 1:first:])
         if second != 0:
-            end = self.parse_tokens(tokens[first + 1::])
+            end = self.parse_tokens(tokens[first + 1:second:])
         else:
             end = None
 
-        dlzka = len(tokens[second + 1::])
+        dlzka = len(tokens[second + 1:0 - 1:])
         if dlzka > 0 and second > 0:
-            step = self.parse_tokens(tokens[second + 1::])
+            step = self.parse_tokens(tokens[second + 1:0 - 1:])
         else:
             step = None
 
-        return Slice(self.parse_tokens(tokens[::]), start, end, step)
+        return Slice(self.parse_tokens(tokens[:x:]), start, end, step)
 
     def parse_pass(self):
         return Pass()
@@ -686,22 +686,22 @@ class Parser():
     def parse_return(self, tokens):
         start = self.match_words(tokens, *SWAPPED_KEYWORDS["return"])
         self.check_end_token(tokens, TokenType.EXCLAMATION)
-        return Return(self.parse_tokens(tokens[start::]))
+        return Return(self.parse_tokens(tokens[start:0 - 1:]))
 
     def parse_raise(self, tokens):
         start = self.match_words(tokens, *SWAPPED_KEYWORDS["raise"])
         self.check_end_token(tokens, TokenType.EXCLAMATION)
-        return Raise(self.parse_tokens(tokens[start::]))
+        return Raise(self.parse_tokens(tokens[start:0 - 1:]))
 
     def parse_yield(self, tokens):
         start = self.match_words(tokens, *SWAPPED_KEYWORDS["yield"])
         self.check_end_token(tokens, TokenType.EXCLAMATION)
-        return Yield(self.parse_tokens(tokens[start::]))
+        return Yield(self.parse_tokens(tokens[start:0 - 1:]))
 
     def parse_del(self, tokens):
         start = self.match_words(tokens, *SWAPPED_KEYWORDS['del'])
         self.check_end_token(tokens, TokenType.EXCLAMATION)
-        return DelNode(self.parse_tokens(tokens[start::]))
+        return DelNode(self.parse_tokens(tokens[start:0 - 1:]))
 
     def parse_logical_operator(self, tokens):
         kw = self.peek_keyword(tokens)
@@ -748,7 +748,7 @@ class Parser():
         dlzka = len(SWAPPED_KEYWORDS["or"])
         end = start + dlzka
         if start != 0 - 1:
-            left = self.parse_tokens(tokens[::])
+            left = self.parse_tokens(tokens[:start:])
             right = self.parse_tokens(tokens[end::])
             return OrNode(left, right)
         else:
@@ -761,7 +761,7 @@ class Parser():
         dlzka = len(SWAPPED_KEYWORDS["and"])
         end = start + dlzka
         if start != 0 - 1:
-            left = self.parse_tokens(tokens[::])
+            left = self.parse_tokens(tokens[:start:])
             right = self.parse_tokens(tokens[end::])
             return AndNode(left, right)
         else:
@@ -774,7 +774,7 @@ class Parser():
         dlzka = len(SWAPPED_KEYWORDS["in"])
         end = start + dlzka
         if start != 0 - 1:
-            left = self.parse_tokens(tokens[::])
+            left = self.parse_tokens(tokens[:start:])
             right = self.parse_tokens(tokens[end::])
             return InNode(left, right)
         else:
@@ -787,7 +787,7 @@ class Parser():
         dlzka = len(SWAPPED_KEYWORDS["is"])
         end = start + dlzka
         if start != 0 - 1:
-            left = self.parse_tokens(tokens[::])
+            left = self.parse_tokens(tokens[:start:])
             right = self.parse_tokens(tokens[end::])
             return IsNode(left, right)
         else:
@@ -800,7 +800,7 @@ class Parser():
         dlzka = len(SWAPPED_KEYWORDS[operator])
         end = start + dlzka
         if start != 0 - 1:
-            left = self.parse_tokens(tokens[::])
+            left = self.parse_tokens(tokens[:start:])
             right = self.parse_tokens(tokens[end::])
             return Operation(left, right, operator)
         else:
@@ -859,17 +859,17 @@ class Parser():
             pass
 
         if bracket in "{}":
-            return self.parse_braces(values[1::])
+            return self.parse_braces(values[1:0 - 1:])
         else:
             pass
 
         if bracket in "[]":
-            return ListNode(self.parse_token_list(values[1::]))
+            return ListNode(self.parse_token_list(values[1:0 - 1:]))
         else:
             pass
 
         if bracket in "()":
-            return TupleNode(self.parse_token_list(values[1::]))
+            return TupleNode(self.parse_token_list(values[1:0 - 1:]))
         else:
             pass
 
@@ -932,14 +932,14 @@ class Parser():
                 pass
 
             if curr_v == ":" and open_brackets == 0:
-                keys.append(self.parse_tokens(tokens[last::]))
+                keys.append(self.parse_tokens(tokens[last:i:]))
                 last = i + 1
             else:
                 pass
 
             dlzka = len(keys)
             if curr_v == "," and dlzka > 0 and open_brackets == 0:
-                values.append(self.parse_tokens(tokens[last::]))
+                values.append(self.parse_tokens(tokens[last:i:]))
                 last = i + 1
             else:
                 pass
@@ -966,7 +966,7 @@ class Parser():
     def parse_elif(self, tokens):
         start = self.consume_words(tokens, *SWAPPED_KEYWORDS["elif"])
         self.check_end_token(tokens, TokenType.QUESTION)
-        return (self.parse_tokens(tokens[start::]), self.parse_block(),)
+        return (self.parse_tokens(tokens[start:0 - 1:]), self.parse_block(),)
 
     def parse_else(self, tokens):
         self.check_end_token(tokens, TokenType.EXCLAMATION)
@@ -975,21 +975,21 @@ class Parser():
     def parse_while(self, tokens):
         self.consume_words(tokens, *SWAPPED_KEYWORDS["while"])
         self.check_end_token(tokens, TokenType.EXCLAMATION)
-        condition = self.parse_tokens(tokens[len(SWAPPED_KEYWORDS["while"])::])
+        condition = self.parse_tokens(tokens[len(SWAPPED_KEYWORDS["while"]):0 - 1:])
         return While(condition, self.parse_block())
 
     def parse_def(self, tokens):
         start = self.consume_words(tokens, *SWAPPED_KEYWORDS["def"])
         self.check_end_token(tokens, TokenType.DOT)
         name = tokens[start].value
-        params = self.parse_token_list(tokens[start + 2::])
+        params = self.parse_token_list(tokens[start + 2:0 - 2:])
         return FunctionDef(name, self.parse_block(), params)
 
     def parse_class(self, tokens):
         start = self.consume_words(tokens, *SWAPPED_KEYWORDS["class"])
         self.check_end_token(tokens, TokenType.DOT)
         name = tokens[start].value
-        parents = self.parse_token_list(tokens[start + 2::])
+        parents = self.parse_token_list(tokens[start + 2:0 - 2:])
         return ClassDef(name, self.parse_block(), parents)
 
     def parse_for(self, tokens):
@@ -1005,9 +1005,9 @@ class Parser():
         else:
             pass
 
-        variables = self.parse_token_list(tokens[start::])
+        variables = self.parse_token_list(tokens[start:end:])
         dlzka = len(SWAPPED_KEYWORDS["in"])
-        expression = self.parse_tokens(tokens[end + dlzka::])
+        expression = self.parse_tokens(tokens[end + dlzka:0 - 1:])
         return ForLoop(variables, expression, self.parse_block())
 
     def parse_try(self, tokens):
@@ -1018,17 +1018,17 @@ class Parser():
     def parse_except(self, tokens):
         start = self.consume_words(tokens, *SWAPPED_KEYWORDS["except"])
         self.check_end_token(tokens, TokenType.QUESTION)
-        return (self.parse_tokens(tokens[start::]), self.parse_block(),)
+        return (self.parse_tokens(tokens[start:0 - 1:]), self.parse_block(),)
 
     def parse_match(self, tokens):
         start = self.consume_words(tokens, *SWAPPED_KEYWORDS["match"])
         self.check_end_token(tokens, TokenType.EXCLAMATION)
-        return MatchNode(self.parse_tokens(tokens[start::]), [])
+        return MatchNode(self.parse_tokens(tokens[start:0 - 1:]), [])
 
     def parse_case(self, tokens):
         start = self.consume_words(tokens, *SWAPPED_KEYWORDS["case"])
         self.check_end_token(tokens, TokenType.QUESTION)
-        return (self.parse_tokens(tokens[start::]), self.parse_block(),)
+        return (self.parse_tokens(tokens[start:0 - 1:]), self.parse_block(),)
 
     def parse_import(self, tokens):
         start = self.consume_words(tokens, *SWAPPED_KEYWORDS["import"])
@@ -1038,7 +1038,7 @@ class Parser():
         else:
             pass
 
-        modules = self.parse_token_list(tokens[start::])
+        modules = self.parse_token_list(tokens[start:end:])
         if end == 0 - 1:
             end = len(tokens)
         else:
@@ -1050,7 +1050,7 @@ class Parser():
     def parse_from(self, tokens):
         start = self.consume_words(tokens, *SWAPPED_KEYWORDS["from"])
         end = self.find_words(tokens, *SWAPPED_KEYWORDS["import"])
-        path = self.parse_tokens(tokens[start::])
+        path = self.parse_tokens(tokens[start:end:])
         start = self.find_words(tokens[end::], *SWAPPED_KEYWORDS["as"])
         if start == 0 - 1:
             start = len(tokens)
@@ -1058,7 +1058,7 @@ class Parser():
             start += end
 
         dlzka = len(SWAPPED_KEYWORDS["import"])
-        modules = self.parse_token_list(tokens[end + dlzka::])
+        modules = self.parse_token_list(tokens[end + dlzka:start:])
         if start == 0 - 1:
             start = len(tokens)
         else:
@@ -1077,14 +1077,14 @@ class Parser():
             pass
 
         self.check_end_token(tokens, TokenType.EXCLAMATION)
-        statement = self.parse_tokens(tokens[start::])
+        statement = self.parse_tokens(tokens[start:end:])
         if end == 0 - 1:
             dlzka = len(tokens)
             end = dlzka - 1
         else:
             end += len(SWAPPED_KEYWORDS["as"])
 
-        aliases = self.parse_tokens(tokens[end::])
+        aliases = self.parse_tokens(tokens[end:0 - 1:])
         return WithNode(statement, self.parse_block(), aliases)
 
 

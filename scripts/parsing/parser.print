@@ -1,8 +1,8 @@
                             z scripts.misc importuj constants
                             z scripts.misc.constants importuj KEYWORDS_LIST, SWAPPED_KEYWORDS, BRACKET_PAIRS
-                            z scripts.tokenizing importuj token
+                            z scripts.tokenizing importuj token ako toooken
                             z scripts.tokenizing.token importuj TokenType, Token
-                            z scripts.misc importuj node
+                            z scripts.misc importuj node ako noooode
                             z scripts.misc.node importuj @
 
                             trieda Parser.
@@ -217,7 +217,7 @@
         tokens[i].token_type = curr_t
         TokenType.COLON = COLON
         čo ak curr_t sa rovná COLON?
-    vráť tokens(self.parse)!
+    vráť tokens(self.parse_slice)!
             vráť tokens(self.parse_index)!
                 vráť tokens(self.parse_function)!
 
@@ -236,7 +236,7 @@
 
                     tokens[0].token_type = tok_t
                     čo ak tok_t sa rovná OPERATOR?
-                Token.NUMBER; 0(Token) = token
+                TokenType.NUMBER; 0(Token) = token
                 0; token(tokens.insert)
                 vráť tokens(self.parse_operator)!
 
@@ -353,14 +353,14 @@
                 čo ak curr_t sa rovná EQUAL alebo curr_t sa rovná EQUAL_OPERATOR?
             tokens[i].value = op
             tokens[0:i]; ","(self.parse_token_list) = left
-            tokens[i:0]; ","(self.parse_token_list) = right
+            tokens[i + 1:]; ","(self.parse_token_list) = right
             zlom!
 
                     vráť right; left; op(Assignment)!
 
                         definuj parse_function(self, tokens).
                     0 = start
-                    pre každé i, tokens v tokens(reversed)(enumerate)!
+                    pre každé i, token v tokens(reversed)(enumerate)!
                 TokenType.LPAREN = LPAREN
                 token.token_type = tok_t
                 čo ak tok_t sa rovná LPAREN?
@@ -455,6 +455,8 @@
                     tokens[second + 1:-1](dĺžka) = dlzka
                     čo ak dlzka je väčšie ako 0 a second je väčšie ako 0?
                 tokens[second + 1:-1](self.parse_tokens) = step
+                    inak!
+                nič = step
 
                     vráť tokens[:x](self.parse_tokens); start; end; step(Slice)!
 
@@ -617,7 +619,7 @@
 
                     vyvráť "Not implemented list type"(NotImplementedError)!
 
-                        definuj parse_token_list(self, values, sep).
+                        definuj parse_token_list(self, values, sep = ",").
                     [,] = result
                     [,] = open_brackets
                     [,] = token_buffer
@@ -629,7 +631,7 @@
             token.value(open_brackets.append)
                 ibaže (token.token_type.is_bracket)?
             open_brackets(dĺžka) = dlzka
-            BRACKET_PAIRSE[token.value] = corresponding_end
+            BRACKET_PAIRS[token.value] = corresponding_end
             open_brackets[-1] = actual_end
 
             čo ak dlzka je väčšie ako 0 a corresponding_end sa rovná actual_end?
@@ -673,7 +675,7 @@
                     keys(dĺžka) = dlzka
                     čo ak dlzka je väčšie ako 0?
                 tokens[last:](self.parse_tokens)(values.append)
-                vráť keys; values(Dictionary)!
+                vráť keys; values(DictionaryNode)!
                     vráť tokens(self.parse_token_list)(SetNode)!
 
                         definuj parse_if(self, tokens).
@@ -742,7 +744,7 @@
                     vráť (self.parse_block)(TryExcept)!
 
                         definuj parse_except(self, tokens).
-                    tokens; @SWAPPED_KEYWORDS["except"](self.consume_keywords) = start
+                    tokens; @SWAPPED_KEYWORDS["except"](self.consume_words) = start
 
                     tokens; TokenType.QUESTION(self.check_end_token)
                     vráť (tokens[start:-1](self.parse_tokens), (self.parse_block),)!
@@ -790,7 +792,7 @@
                     čo ak start sa rovná -1?
                 tokens(dĺžka) = start
                     inak!
-                SWAPPED_KEYWORDS["as"] += start
+                SWAPPED_KEYWORDS["as"](dĺžka) += start
 
                     tokens[start:](self.parse_token_list) = aliases
                     vráť path; modules; aliases(FromImport)!
@@ -799,7 +801,8 @@
                     tokens; @SWAPPED_KEYWORDS["with"](self.consume_words) = start
                     tokens; @SWAPPED_KEYWORDS["as"](self.find_words) = end
                     čo ak end sa rovná -1?
-                tokens(dĺžka) = end
+                tokens(dĺžka) = dlzka
+                dlzka - 1 = end
 
                     tokens; TokenType.EXCLAMATION(self.check_end_token)
 

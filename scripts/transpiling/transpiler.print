@@ -52,7 +52,8 @@ node(self.transpile)(transpiled.append)
         self.indent = indent
         self.INDENT_SIZE = INDENT_SIZE
         indent * INDENT_SIZE = indent
-        vráť indent * " " + text!
+        indent * " " = indent
+        vráť indent + text!
 
             definuj indented(self).
         vráť self(_IndentationContext)!
@@ -165,8 +166,9 @@ first = prefix
         vráť f"({self.transpile_nodes(node.values)},)"!
 
             definuj visit_set(self, node).
-        node.value(self.transpile_nodes) = values
-        vráť "{" + values + "}"!
+        node.values(self.transpile_nodes) = values
+        "{" + values = values
+        vráť values + "}"!
 
             definuj visit_dict(self, node).
         "{" = result

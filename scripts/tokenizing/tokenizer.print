@@ -43,7 +43,8 @@
         token.token_type = ttype
         TokenType.INDENT = indent_type
         čo ak ttype sa rovná indent_type?
-    max_indent -= token.value
+    token.value = value
+    max_indent - value = token.value
 
                 definuj tokenize(self, code).
             code = self.code
@@ -205,7 +206,8 @@ value(self.tokens.append)
             (self.peek) = peek
             kým platí že peek sa rovná " "!
         1 += value
-        (self.advance) = peek
+        (self.advance)
+        (self.peek) = peek
 
             value = self.curr_indent
 

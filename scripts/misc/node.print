@@ -131,7 +131,7 @@
     expression = self.expression
     else_body = self.else_body
     čo ak else_body je nič?
-[,] = self.else_body
+[(Pass),](Block) = self.else_body
 
         definuj accept(self, visitor).
     vráť self(visitor.visit_for)!
@@ -163,7 +163,7 @@
     expression = self.expression
     filter_condition = self.filter
     čo ak body je nič?
-[,] = self.body
+[(Pass),](Block) = self.body
 
         definuj accept(self, visitor).
     vráť self(visitor.visit_list_comp)!
