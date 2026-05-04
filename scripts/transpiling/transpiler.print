@@ -162,7 +162,7 @@ first = prefix
         vráť f"[{self.transpile_nodes(node.values)}]"!
 
             definuj visit_tuple(self, node).
-        vráť f"({self.transpile_nodes(node.values)})"!
+        vráť f"({self.transpile_nodes(node.values)},)"!
 
             definuj visit_set(self, node).
         node.value(self.transpile_nodes) = values

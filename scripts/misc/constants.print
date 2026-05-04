@@ -50,7 +50,7 @@ vráť keyword(dĺžka)!
 
     (dict) = SWAPPED_KEYWORDS
     pre každé key, value v (KEYWORDS.items)!
-value = SWAPPED_KEYWORDS[key]
+key = SWAPPED_KEYWORDS[value]
 
     (KEYWORDS.items); key = keyword_length; reverse = True(sorted) = KEYWORDS_LIST
 

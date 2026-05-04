@@ -188,7 +188,7 @@ class Transpiler():
         return f"[{self.transpile_nodes(node.values)}]"
 
     def visit_tuple(self, node):
-        return f"({self.transpile_nodes(node.values)})"
+        return f"({self.transpile_nodes(node.values)},)"
 
     def visit_set(self, node):
         values = self.transpile_nodes(node.value)

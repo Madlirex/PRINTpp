@@ -68,6 +68,7 @@ class Tokenizer():
         self.curr_indent = 0
         token = Token(TokenType.NEWLINE, "\n")
         self.tokens.append(token)
+        self.tokens.append(self.read_indent())
         while self.je_koniec():
             char = self.peek()
             if char == "\n":
@@ -102,7 +103,7 @@ class Tokenizer():
                 pass
 
             if char == '"' or char == "'":
-                self.tokens.apped(self.read_string())
+                self.tokens.append(self.read_string())
                 continue
             else:
                 pass
@@ -168,7 +169,7 @@ class Tokenizer():
                 pass
 
             if char == ":":
-                token = Token(TokenType.COLOR, char)
+                token = Token(TokenType.COLON, char)
                 self.tokens.append(token)
                 self.advance()
                 continue
@@ -327,6 +328,7 @@ class Tokenizer():
                 je_alfa = peek.isalnum()
                 je_podtrz = peek == "_"
                 je_at = peek == "@"
+                je_dobre = je_alfa or je_podtrz or je_at
             else:
                 pass
 
@@ -351,7 +353,7 @@ class Tokenizer():
         peek1 = self.peek()
         peek2 = self.peek(1)
         peek3 = self.peek(2)
-        if peek1 and peek2 and peek3:
+        if peek1 == '"' and peek2 == '"' and peek3 == '"':
             return self.read_multi_comment()
         else:
             pass
