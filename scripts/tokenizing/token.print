@@ -64,4 +64,4 @@ token_type = self.token_type
 value = self.value
 
     definuj __repr__(self).
-vráť f"{self.token_type.name}: {self.values}"!
+vráť f"{self.token_type.name}: {self.value}"!

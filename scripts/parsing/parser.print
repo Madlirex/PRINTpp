@@ -55,13 +55,17 @@
 
                         definuj skip_redundant_newlines(self).
                     (self.is_at_end) = je_koniec
-                    2(self.peek).token_type = tok_t
+                    čo ak neplatí je_koniec?
+                2(self.peek).token_type = tok_t
+                    inak!
+                nič = tok_t
                     TokenType.NEWLINE = NEWLINE
                     kým platí že neplatí je_koniec a tok_t sa rovná NEWLINE!
                 TokenType.NEWLINE(self.consume)
                 TokenType.INDENT(self.consume)
                 (self.is_at_end) = je_koniec
-                2(self.peek).token_type = tok_t
+                čo ak neplatí je_koniec?
+            2(self.peek).token_type = tok_t
 
                         definuj check_words(self, tokens, @words).
                     pre každé i, word v words(enumerate)!
@@ -132,8 +136,12 @@
                     0 = i
                     TokenType.NEWLINE = NEWLINE
                     TokenType.COMMENT = COMMENT
-                    i(self.peek).token_type = tok_t
+
                     (self.is_at_end) = je_koniec
+                    čo ak neplatí je_koniec?
+                i(self.peek).token_type = tok_t
+                    inak!
+                nič = tok_t
                     kým platí že neplatí je_koniec a neplatí tok_t sa rovná NEWLINE!
                 i(self.peek)(token_buffer.append)
                 1 += i
@@ -142,7 +150,8 @@
             (token_buffer.pop)
 
                 (self.is_at_end) = je_koniec
-                i(self.peek).token_type = tok_t
+                čo ak neplatí je_koniec?
+            i(self.peek).token_type = tok_t
                     vráť token_buffer!
 
                         definuj consume_curr_line(self).
@@ -150,15 +159,19 @@
                     (self.is_at_end) = je_koniec
                     TokenType.NEWLINE = NEWLINE
                     TokenType.COMMENT = COMMENT
-                    (self.peek).token_type = tok_t
+                    čo ak neplatí je_koniec?
+                (self.peek).token_type = tok_t
+                    inak!
+                nič = tok_t
                     kým platí že neplatí je_koniec a neplatí tok_t sa rovná NEWLINE!
                 (self.advance)(token_buffer.append)
                 token_buffer[-1].token_type = last_t
                 čo ak last_t sa rovná COMMENT?
             (token_buffer.pop)
 
-                (self.peek).token_type = tok_t
                 (self.is_at_end) = je_koniec
+                čo ak neplatí je_koniec?
+            (self.peek).token_type = tok_t
 
                     vráť token_buffer!
 
@@ -281,7 +294,7 @@
                     vyvráť f"Not implemented for {line}"(NotImplementedError)!
 
                         definuj parse_block(self).
-                    (self.skip_redundant_lines)
+                    (self.skip_redundant_newlines)
                     4 += self.expected_indent
                     nič = past_statement
                     [,] = nodes
@@ -293,7 +306,10 @@
                 1(self.peek).value = indent
 
                     (self.is_at_end) = je_koniec
-                    1(self.peek).value = next_indent
+                    čo ak neplatí je_koniec?
+                1(self.peek).value = next_indent
+                    inak!
+                0 = next_indent
                     kým platí že neplatí je_koniec a next_indent sa rovná indent!
                 (self.advance)
                 (self.advance)(self.check_indent)
@@ -319,7 +335,8 @@
 
                 (self.skip_redundant_newlines)
                 (self.is_at_end) = je_koniec
-                1(self.peek).value = next_indent
+                čo ak neplatí je_koniec?
+            1(self.peek).value = next_indent
 
                     4 -= self.expected_indent
                     vráť nodes(Block)!

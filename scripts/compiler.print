@@ -81,8 +81,8 @@ vráť nič!
 
     path.parent(self.ensure_dir)
 
-    využi "r"; encoding = Compiler.ENCODING(path.open) ako f!
-(f.read) = data
+    využi "w"; encoding = Compiler.ENCODING(path.open) ako f!
+compiled_code(f.write)
 
     pre každé file v files!
 "."(@file.split)(Path) = p

@@ -52,6 +52,7 @@ class Compiler():
         start_time = time.time()
         print("Tokenizing...")
         tokens = self.tokenizer.tokenize(data)
+        print(tokens)
         print(f"Tokenization finished, time elapsed: {(time.time() - start_time):.3g}s")
         start_time = time.time()
         print("Parsing...")

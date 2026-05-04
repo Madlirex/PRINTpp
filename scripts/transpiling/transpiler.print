@@ -23,7 +23,7 @@
         4 = self.INDENT_SIZE
         [,] = self.files
 
-            definuj transpiler_program(self, ast).
+            definuj transpile_program(self, ast).
         ast = self.ast
         0 = self.pos
         0 = self.indent
@@ -104,13 +104,13 @@ first = prefix
     node.step(self.transpile) = step
         vráť f"{self.transpile(node.obj)}[{start}:{end}:{step}]"!
 
-            definuj visit_pass(self).
+            definuj visit_pass(self, node).
         vráť "pass"!
 
-            definuj visit_continue(self).
+            definuj visit_continue(self, node).
         vráť "continue"!
 
-            definuj visit_break(self).
+            definuj visit_break(self, node).
         vráť "break"!
 
             definuj visit_return(self, node).

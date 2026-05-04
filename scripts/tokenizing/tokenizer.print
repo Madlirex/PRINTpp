@@ -52,7 +52,7 @@
             "" = self.curr_brackets
             0 = self.curr_indent
 
-            "\n"; TokenType.NEWLINE(Token) = token
+            TokenType.NEWLINE; "\n"(Token) = token
             token(self.tokens.append)
 
             kým platí že (self.je_koniec)!
@@ -225,9 +225,12 @@ value(self.tokens.append)
             klamstvo = is_decimal
 
             (self.peek) = peek
-            (peek.isdigit) = je_digit
-            peek sa rovná "." = je_dot
-            je_digit alebo je_dot = je_dobre
+            čo ak peek?
+        (peek.isdigit) = je_digit
+        peek sa rovná "." = je_dot
+        je_digit alebo je_dot = je_dobre
+            inak!
+        klamstvo = je_dobre
 
             kým platí že peek a je_dobre!
 
@@ -239,9 +242,10 @@ zlom!
         (self.advance) += num
 
         (self.peek) = peek
-        (peek.isdigit) = je_digit
-        peek sa rovná "." = je_dot
-        je_digit alebo je_dot = je_dobre
+        čo ak peek?
+    (peek.isdigit) = je_digit
+    peek sa rovná "." = je_dot
+    je_digit alebo je_dot = je_dobre
 
             čo ak is_decimal?
         num(float) = hodnota
@@ -254,10 +258,13 @@ zlom!
             "" = name
 
             (self.peek) = peek
-            (peek.isalnum) = je_alfa
-            peek sa rovná "_" = je_podtrz
-            peek sa rovná "@" = je_at
-            je_alfa alebo je_podtrz alebo je_at = je_dobre
+            čo ak peek?
+        (peek.isalnum) = je_alfa
+        peek sa rovná "_" = je_podtrz
+        peek sa rovná "@" = je_at
+        je_alfa alebo je_podtrz alebo je_at = je_dobre
+            inak!
+        klamstvo = je_dobre
 
             kým platí že peek a je_dobre!
         (self.advance) = char
@@ -267,9 +274,10 @@ zlom!
     char += name
 
         (self.peek) = peek
-        (peek.isalnum) = je_alfa
-        peek sa rovná "_" = je_podtrz
-        peek sa rovná "@" = je_at
+        čo ak peek?
+    (peek.isalnum) = je_alfa
+    peek sa rovná "_" = je_podtrz
+    peek sa rovná "@" = je_at
 
             vráť TokenType.VALUE; name(Token)!
 

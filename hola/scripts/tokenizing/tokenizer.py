@@ -66,7 +66,7 @@ class Tokenizer():
         self.tokens = []
         self.curr_brackets = ""
         self.curr_indent = 0
-        token = Token(TokenType.NEWLINE, "\n")
+        token = Token("\n", TokenType.NEWLINE)
         self.tokens.append(token)
         while self.je_koniec():
             char = self.peek()
